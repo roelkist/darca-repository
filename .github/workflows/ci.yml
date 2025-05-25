@@ -1,0 +1,79 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]  # Test against the latest 3 versions
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Configure Poetry
+        run: poetry config virtualenvs.in-project true
+
+      - name: Install Dependencies
+        run: make install
+
+      - name: Run CI Pipeline
+        run: make ci
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: python-${{ matrix.python-version }}
+          name: codecov-${{ matrix.python-version }}
+          fail_ci_if_error: true
+
+      - name: Upload Coverage Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ matrix.python-version }}
+          path: htmlcov/
+
+      - name: Upload Documentation as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sphinx-docs-${{ matrix.python-version }}
+          path: docs/build/html/
+
+  deploy:
+    # This job will run only after all ci matrix jobs succeed
+    needs: [ci]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Download docs artifact from whichever Python version you want to deploy
+      - name: Download docs artifact (Python 3.12 here)
+        uses: actions/download-artifact@v4
+        with:
+          name: sphinx-docs-3.12
+          path: docs/build/html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build/html     
+
