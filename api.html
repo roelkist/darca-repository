@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends. 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Usage Guide" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-darca_repository.instance">Repository Instance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.instance.RepositoryInstance"><code class="docutils literal notranslate"><span class="pre">RepositoryInstance</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.instance.RepositoryInstance.client"><code class="docutils literal notranslate"><span class="pre">RepositoryInstance.client</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.instance.RepositoryInstance.connect"><code class="docutils literal notranslate"><span class="pre">RepositoryInstance.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.instance.RepositoryInstance.metadata"><code class="docutils literal notranslate"><span class="pre">RepositoryInstance.metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.instance.RepositoryInstance.name"><code class="docutils literal notranslate"><span class="pre">RepositoryInstance.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.instance.RepositoryInstance.test_connection"><code class="docutils literal notranslate"><span class="pre">RepositoryInstance.test_connection()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-darca_repository.models">Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.models.Repository"><code class="docutils literal notranslate"><span class="pre">Repository</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.credentials"><code class="docutils literal notranslate"><span class="pre">Repository.credentials</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.enabled"><code class="docutils literal notranslate"><span class="pre">Repository.enabled</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.get_secret"><code class="docutils literal notranslate"><span class="pre">Repository.get_secret()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.model_config"><code class="docutils literal notranslate"><span class="pre">Repository.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.name"><code class="docutils literal notranslate"><span class="pre">Repository.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.parameters"><code class="docutils literal notranslate"><span class="pre">Repository.parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.priority"><code class="docutils literal notranslate"><span class="pre">Repository.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.scheme"><code class="docutils literal notranslate"><span class="pre">Repository.scheme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.storage_url"><code class="docutils literal notranslate"><span class="pre">Repository.storage_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.Repository.tags"><code class="docutils literal notranslate"><span class="pre">Repository.tags</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.models.StorageScheme"><code class="docutils literal notranslate"><span class="pre">StorageScheme</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.StorageScheme.FILE"><code class="docutils literal notranslate"><span class="pre">StorageScheme.FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.StorageScheme.MEMORY"><code class="docutils literal notranslate"><span class="pre">StorageScheme.MEMORY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.StorageScheme.NFS"><code class="docutils literal notranslate"><span class="pre">StorageScheme.NFS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.models.StorageScheme.S3"><code class="docutils literal notranslate"><span class="pre">StorageScheme.S3</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-darca_repository.registry.factory">Registry System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.registry.factory.get_repository_registry"><code class="docutils literal notranslate"><span class="pre">get_repository_registry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.registry.base.RepositoryRegistry"><code class="docutils literal notranslate"><span class="pre">RepositoryRegistry</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.registry.base.RepositoryRegistry.get_profile"><code class="docutils literal notranslate"><span class="pre">RepositoryRegistry.get_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.registry.base.RepositoryRegistry.list_profiles"><code class="docutils literal notranslate"><span class="pre">RepositoryRegistry.list_profiles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.registry.yaml_registry.YamlRepositoryRegistry"><code class="docutils literal notranslate"><span class="pre">YamlRepositoryRegistry</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.registry.yaml_registry.YamlRepositoryRegistry.get_profile"><code class="docutils literal notranslate"><span class="pre">YamlRepositoryRegistry.get_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.registry.yaml_registry.YamlRepositoryRegistry.list_profiles"><code class="docutils literal notranslate"><span class="pre">YamlRepositoryRegistry.list_profiles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.registry.mysql_registry.MySQLRepositoryRegistry"><code class="docutils literal notranslate"><span class="pre">MySQLRepositoryRegistry</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#darca_repository.registry.mysql_registry.MySQLRepositoryRegistry.list_profiles"><code class="docutils literal notranslate"><span class="pre">MySQLRepositoryRegistry.list_profiles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-darca_repository.exceptions">Exceptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.exceptions.RepositoryAccessDenied"><code class="docutils literal notranslate"><span class="pre">RepositoryAccessDenied</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.exceptions.RepositoryConnectionError"><code class="docutils literal notranslate"><span class="pre">RepositoryConnectionError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.exceptions.RepositoryException"><code class="docutils literal notranslate"><span class="pre">RepositoryException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.exceptions.RepositoryNotFound"><code class="docutils literal notranslate"><span class="pre">RepositoryNotFound</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.exceptions.RepositoryNotFoundError"><code class="docutils literal notranslate"><span class="pre">RepositoryNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#darca_repository.exceptions.RepositoryValidationError"><code class="docutils literal notranslate"><span class="pre">RepositoryValidationError</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<p>This section documents the public API of the <cite>darca-repository</cite> module, including its key classes,
+interfaces, exceptions, and registries.</p>
+<hr class="docutils" />
+<section id="module-darca_repository.instance">
+<span id="repository-instance"></span><h2>Repository Instance<a class="headerlink" href="#module-darca_repository.instance" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="darca_repository.instance.RepositoryInstance">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.instance.</span></span><span class="sig-name descname"><span class="pre">RepositoryInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repository</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/instance.html#RepositoryInstance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.instance.RepositoryInstance" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an active repository instance with its storage client resolved.</p>
+<dl class="simple">
+<dt>Provides access to:</dt><dd><ul class="simple">
+<li><p>repository metadata</p></li>
+<li><p>associated StorageClient</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="darca_repository.instance.RepositoryInstance.client">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">client</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">StorageClient</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#darca_repository.instance.RepositoryInstance.client" title="Link to this definition"></a></dt>
+<dd><p>Return the connected StorageClient if available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.instance.RepositoryInstance.connect">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">StorageClient</span></span></span><a class="reference internal" href="_modules/darca_repository/instance.html#RepositoryInstance.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.instance.RepositoryInstance.connect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="darca_repository.instance.RepositoryInstance.metadata">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a></em><a class="headerlink" href="#darca_repository.instance.RepositoryInstance.metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="darca_repository.instance.RepositoryInstance.name">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#darca_repository.instance.RepositoryInstance.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.instance.RepositoryInstance.test_connection">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/darca_repository/instance.html#RepositoryInstance.test_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.instance.RepositoryInstance.test_connection" title="Link to this definition"></a></dt>
+<dd><p>Probes whether the repository’s root directory is reachable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the repository is usable, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="module-darca_repository.models">
+<span id="models"></span><h2>Models<a class="headerlink" href="#module-darca_repository.models" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="darca_repository.models.Repository">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.models.</span></span><span class="sig-name descname"><span class="pre">Repository</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_url:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme:</span> <span class="pre">~darca_repository.models.StorageScheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~pydantic.types.SecretStr]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/models.html#Repository"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.models.Repository" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Represents a configured repository for storing logical spaces.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.credentials">
+<span class="sig-name descname"><span class="pre">credentials</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SecretStr</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#darca_repository.models.Repository.credentials" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.enabled">
+<span class="sig-name descname"><span class="pre">enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#darca_repository.models.Repository.enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.get_secret">
+<span class="sig-name descname"><span class="pre">get_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/darca_repository/models.html#Repository.get_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.models.Repository.get_secret" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#darca_repository.models.Repository.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#darca_repository.models.Repository.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#darca_repository.models.Repository.parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.priority">
+<span class="sig-name descname"><span class="pre">priority</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#darca_repository.models.Repository.priority" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.scheme">
+<span class="sig-name descname"><span class="pre">scheme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#darca_repository.models.StorageScheme" title="darca_repository.models.StorageScheme"><span class="pre">StorageScheme</span></a></em><a class="headerlink" href="#darca_repository.models.Repository.scheme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.storage_url">
+<span class="sig-name descname"><span class="pre">storage_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#darca_repository.models.Repository.storage_url" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.Repository.tags">
+<span class="sig-name descname"><span class="pre">tags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#darca_repository.models.Repository.tags" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="darca_repository.models.StorageScheme">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.models.</span></span><span class="sig-name descname"><span class="pre">StorageScheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/models.html#StorageScheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.models.StorageScheme" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.StorageScheme.FILE">
+<span class="sig-name descname"><span class="pre">FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file'</span></em><a class="headerlink" href="#darca_repository.models.StorageScheme.FILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.StorageScheme.MEMORY">
+<span class="sig-name descname"><span class="pre">MEMORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mem'</span></em><a class="headerlink" href="#darca_repository.models.StorageScheme.MEMORY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.StorageScheme.NFS">
+<span class="sig-name descname"><span class="pre">NFS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nfs'</span></em><a class="headerlink" href="#darca_repository.models.StorageScheme.NFS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="darca_repository.models.StorageScheme.S3">
+<span class="sig-name descname"><span class="pre">S3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'s3'</span></em><a class="headerlink" href="#darca_repository.models.StorageScheme.S3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="module-darca_repository.registry.factory">
+<span id="registry-system"></span><h2>Registry System<a class="headerlink" href="#module-darca_repository.registry.factory" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="darca_repository.registry.factory.get_repository_registry">
+<span class="sig-prename descclassname"><span class="pre">darca_repository.registry.factory.</span></span><span class="sig-name descname"><span class="pre">get_repository_registry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#darca_repository.registry.base.RepositoryRegistry" title="darca_repository.registry.base.RepositoryRegistry"><span class="pre">RepositoryRegistry</span></a></span></span><a class="reference internal" href="_modules/darca_repository/registry/factory.html#get_repository_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.factory.get_repository_registry" title="Link to this definition"></a></dt>
+<dd><p>Factory to instantiate the appropriate RepositoryRegistry backend
+based on the DARCA_REPOSITORY_MODE environment variable.</p>
+</dd></dl>
+
+<dl class="py class" id="module-darca_repository.registry.base">
+<dt class="sig sig-object py" id="darca_repository.registry.base.RepositoryRegistry">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.registry.base.</span></span><span class="sig-name descname"><span class="pre">RepositoryRegistry</span></span><a class="reference internal" href="_modules/darca_repository/registry/base.html#RepositoryRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.base.RepositoryRegistry" title="Link to this definition"></a></dt>
+<dd><p>Abstract interface for loading and managing repository profiles.</p>
+<p>Implementations may load profiles from:
+- Local YAML files
+- SQL databases (MySQL, PostgreSQL, etc.)
+- Remote config services</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.registry.base.RepositoryRegistry.get_profile">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a></span></span><a class="reference internal" href="_modules/darca_repository/registry/base.html#RepositoryRegistry.get_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.base.RepositoryRegistry.get_profile" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single repository profile by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>KeyError</strong> – if the profile does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.registry.base.RepositoryRegistry.list_profiles">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/darca_repository/registry/base.html#RepositoryRegistry.list_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.base.RepositoryRegistry.list_profiles" title="Link to this definition"></a></dt>
+<dd><p>Return a list of all available repository profiles.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-darca_repository.registry.yaml_registry">
+<dt class="sig sig-object py" id="darca_repository.registry.yaml_registry.YamlRepositoryRegistry">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.registry.yaml_registry.</span></span><span class="sig-name descname"><span class="pre">YamlRepositoryRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/registry/yaml_registry.html#YamlRepositoryRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.yaml_registry.YamlRepositoryRegistry" title="Link to this definition"></a></dt>
+<dd><p>Loads repository profiles from a YAML directory.</p>
+<p>Each YAML file represents a single repository profile.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.registry.yaml_registry.YamlRepositoryRegistry.get_profile">
+<span class="sig-name descname"><span class="pre">get_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a></span></span><a class="reference internal" href="_modules/darca_repository/registry/yaml_registry.html#YamlRepositoryRegistry.get_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.yaml_registry.YamlRepositoryRegistry.get_profile" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single repository profile by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>KeyError</strong> – if the profile does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.registry.yaml_registry.YamlRepositoryRegistry.list_profiles">
+<span class="sig-name descname"><span class="pre">list_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/darca_repository/registry/yaml_registry.html#YamlRepositoryRegistry.list_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.yaml_registry.YamlRepositoryRegistry.list_profiles" title="Link to this definition"></a></dt>
+<dd><p>Return a list of all available repository profiles.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-darca_repository.registry.mysql_registry">
+<dt class="sig sig-object py" id="darca_repository.registry.mysql_registry.MySQLRepositoryRegistry">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.registry.mysql_registry.</span></span><span class="sig-name descname"><span class="pre">MySQLRepositoryRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/registry/mysql_registry.html#MySQLRepositoryRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.mysql_registry.MySQLRepositoryRegistry" title="Link to this definition"></a></dt>
+<dd><p>Future implementation: MySQL-backed repository registry.</p>
+<p>Intended to support centralized, mutable repository configurations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="darca_repository.registry.mysql_registry.MySQLRepositoryRegistry.list_profiles">
+<span class="sig-name descname"><span class="pre">list_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#darca_repository.models.Repository" title="darca_repository.models.Repository"><span class="pre">Repository</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/darca_repository/registry/mysql_registry.html#MySQLRepositoryRegistry.list_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.registry.mysql_registry.MySQLRepositoryRegistry.list_profiles" title="Link to this definition"></a></dt>
+<dd><p>Return a list of all available repository profiles.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="module-darca_repository.exceptions">
+<span id="exceptions"></span><h2>Exceptions<a class="headerlink" href="#module-darca_repository.exceptions" title="Link to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="darca_repository.exceptions.RepositoryAccessDenied">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.exceptions.</span></span><span class="sig-name descname"><span class="pre">RepositoryAccessDenied</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/exceptions.html#RepositoryAccessDenied"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.exceptions.RepositoryAccessDenied" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#darca_repository.exceptions.RepositoryException" title="darca_repository.exceptions.RepositoryException"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepositoryException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="darca_repository.exceptions.RepositoryConnectionError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.exceptions.</span></span><span class="sig-name descname"><span class="pre">RepositoryConnectionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/exceptions.html#RepositoryConnectionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.exceptions.RepositoryConnectionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#darca_repository.exceptions.RepositoryException" title="darca_repository.exceptions.RepositoryException"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepositoryException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="darca_repository.exceptions.RepositoryException">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.exceptions.</span></span><span class="sig-name descname"><span class="pre">RepositoryException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'REPOSITORY_ERROR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/exceptions.html#RepositoryException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.exceptions.RepositoryException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DarcaException</span></code></p>
+<p>General-purpose exception for repository-related failures.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="darca_repository.exceptions.RepositoryNotFound">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.exceptions.</span></span><span class="sig-name descname"><span class="pre">RepositoryNotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/exceptions.html#RepositoryNotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.exceptions.RepositoryNotFound" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#darca_repository.exceptions.RepositoryException" title="darca_repository.exceptions.RepositoryException"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepositoryException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="darca_repository.exceptions.RepositoryNotFoundError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.exceptions.</span></span><span class="sig-name descname"><span class="pre">RepositoryNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/exceptions.html#RepositoryNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.exceptions.RepositoryNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#darca_repository.exceptions.RepositoryException" title="darca_repository.exceptions.RepositoryException"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepositoryException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="darca_repository.exceptions.RepositoryValidationError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">darca_repository.exceptions.</span></span><span class="sig-name descname"><span class="pre">RepositoryValidationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">cause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/darca_repository/exceptions.html#RepositoryValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#darca_repository.exceptions.RepositoryValidationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#darca_repository.exceptions.RepositoryException" title="darca_repository.exceptions.RepositoryException"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepositoryException</span></code></a></p>
+<p>Raised when a repository fails validation checks.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2025 darca-repository Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darca Repository Documentation &mdash; darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends. 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage Guide" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends.
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends.</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Darca Repository Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="darca-repository-documentation">
+<h1>Darca Repository Documentation<a class="headerlink" href="#darca-repository-documentation" title="Link to this heading"></a></h1>
+<p>Welcome to the official documentation for <strong>darca-repository</strong> —
+an async-aware, credential-capable repository abstraction built on top of <cite>darca-storage</cite>.</p>
+<p>It enables logical data spaces to be resolved, validated, and connected
+with secure access control and extensible backend support.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This project is part of the Darca ecosystem.
+See <a class="reference external" href="https://github.com/roelkist">https://github.com/roelkist</a> for related modules.</p>
+</div>
+<hr class="docutils" />
+<section id="readme">
+<h2>Readme<a class="headerlink" href="#readme" title="Link to this heading"></a></h2>
+</section>
+</section>
+<section id="darca-repository">
+<h1>darca-repository<a class="headerlink" href="#darca-repository" title="Link to this heading"></a></h1>
+<p>A session-aware, credential-capable repository abstraction for structured storage backends.</p>
+<p><cite>darca-repository</cite> enables secure, pluggable resolution of storage spaces into active clients.
+It builds on <cite>darca-storage</cite> and provides a registry-driven mechanism to manage logical repositories
+with rich metadata, credential handling, and async file operations.</p>
+<p><a class="reference external" href="https://github.com/roelkist/darca-repository/actions"><img alt="Build Status" src="https://github.com/roelkist/darca-repository/actions/workflows/ci.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/roelkist/darca-repository/actions"><img alt="Deploy Status" src="https://github.com/roelkist/darca-repository/actions/workflows/cd.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/gh/roelkist/darca-repository"><img alt="Codecov" src="https://codecov.io/gh/roelkist/darca-repository/branch/main/graph/badge.svg" /></a> <a class="reference external" href="https://github.com/psf/black"><img alt="Black code style" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a> <a class="reference external" href="https://opensource.org/licenses/MIT"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a> <a class="reference external" href="https://pypi.org/project/darca-repository/"><img alt="PyPi" src="https://img.shields.io/pypi/v/darca-repository" /></a> <a class="reference external" href="https://roelkist.github.io/darca-repository/"><img alt="GitHub Pages" src="https://img.shields.io/github/deployments/roelkist/darca-repository/github-pages" /></a></p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>✅ Async-first storage repository resolution</p></li>
+<li><p>🔐 Credential injection via secrets or environment variables</p></li>
+<li><p>🔄 Session metadata propagation for observability</p></li>
+<li><p>🔌 Pluggable registry backends (YAML, SQL-ready)</p></li>
+<li><p>🔎 Clean interface for probing, connecting, and verifying access</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python &gt;= 3.9</p></li>
+<li><p>darca-storage</p></li>
+<li><p>pydantic</p></li>
+<li><p>PyYAML (if using YAML-based registries)</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>📦 Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>darca-repository
+</pre></div>
+</div>
+<p>Or using Poetry:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>add<span class="w"> </span>darca-repository
+</pre></div>
+</div>
+</section>
+<section id="quick-usage">
+<h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">darca_repository.instance</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepositoryInstance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">darca_repository.registry.factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_repository_registry</span>
+
+<span class="n">registry</span> <span class="o">=</span> <span class="n">get_repository_registry</span><span class="p">()</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="s2">&quot;my-space&quot;</span><span class="p">)</span>
+
+<span class="n">repo</span> <span class="o">=</span> <span class="n">RepositoryInstance</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repo</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+<span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello.txt&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello, Darca!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="repository-format-yaml">
+<h2>Repository Format (YAML)<a class="headerlink" href="#repository-format-yaml" title="Link to this heading"></a></h2>
+<p>Example YAML file (<cite>workspace-main.yaml</cite>):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workspace-main</span>
+<span class="nt">storage_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///var/data/workspace</span>
+<span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span>
+<span class="nt">credentials</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DARCA_TOKEN}</span>
+<span class="nt">parameters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<span class="nt">tags</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</pre></div>
+</div>
+</section>
+<section id="documentation">
+<h2>📚 Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<p>Visit the full documentation:</p>
+<p>👉 <a class="reference external" href="https://roelkist.github.io/darca-repository/">https://roelkist.github.io/darca-repository/</a></p>
+<p>To build locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docs
+</pre></div>
+</div>
+</section>
+<section id="testing">
+<h2>🧪 Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>Run all tests using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<p>Coverage and reports:</p>
+<ul class="simple">
+<li><p>Generates <cite>coverage.svg</cite> badge</p></li>
+<li><p>Stores HTML output in <cite>htmlcov/</cite></p></li>
+<li><p>Fully parallel test support with <cite>xdist</cite></p></li>
+</ul>
+</section>
+<section id="contributing">
+<h2>🤝 Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>We welcome all contributions!</p>
+<ul class="simple">
+<li><p>Create a new <strong>branch</strong> from <cite>main</cite></p></li>
+<li><p>Use PRs to submit changes</p></li>
+<li><p>You can also open feature requests or issues using our GitHub templates</p></li>
+</ul>
+<p>See <cite>CONTRIBUTING.rst</cite> for detailed guidelines.</p>
+</section>
+<section id="license">
+<h2>📄 License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p>This project is licensed under the MIT License.
+See <a class="reference external" href="https://github.com/roelkist/darca-repository/blob/main/LICENSE">LICENSE</a> for details.</p>
+</section>
+<hr class="docutils" />
+<section id="community-contribution">
+<h2>Community &amp; Contribution<a class="headerlink" href="#community-contribution" title="Link to this heading"></a></h2>
+</section>
+</section>
+<section id="contributing-to-darca-repository">
+<h1>Contributing to darca-repository<a class="headerlink" href="#contributing-to-darca-repository" title="Link to this heading"></a></h1>
+<p>Thanks for your interest in contributing to <strong>darca-repository</strong> — a project by <a class="reference external" href="https://github.com/roelkist">Roel Kist</a>.</p>
+<p>We welcome issues, pull requests, questions, suggestions, and other contributions from the community.</p>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<p>Clone the project and set up the development environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/roelkist/darca-repository.git
+<span class="nb">cd</span><span class="w"> </span>darca-repository
+make<span class="w"> </span>install
+</pre></div>
+</div>
+<p>This will create a virtual environment and install all dependencies needed for development, testing, and formatting.</p>
+</section>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>🔍 Open an issue first for bugs or major features</p></li>
+<li><p>✅ Fork, branch, and develop your changes</p></li>
+<li><p>📦 Run tests and checks locally before submitting your PR</p></li>
+<li><p>📝 Include docstrings and tests for new functionality</p></li>
+</ul>
+</section>
+<section id="make-targets">
+<h2>Make Targets<a class="headerlink" href="#make-targets" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="nb">test</span><span class="w">      </span><span class="c1"># Run full test suite with coverage</span>
+make<span class="w"> </span>check<span class="w">     </span><span class="c1"># Run linting, formatting, and typing</span>
+make<span class="w"> </span>format<span class="w">    </span><span class="c1"># Auto-format code (black, ruff)</span>
+make<span class="w"> </span>clean<span class="w">     </span><span class="c1"># Remove temp files, caches, build artifacts</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>Testing<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>Tests are located in the <code class="docutils literal notranslate"><span class="pre">tests/</span></code> directory and use <cite>pytest</cite>.</p>
+<p>All code contributions must be accompanied by appropriate tests and aim to maintain <strong>100% coverage</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+</section>
+<section id="code-style">
+<h2>Code Style<a class="headerlink" href="#code-style" title="Link to this heading"></a></h2>
+<p>This project enforces strict quality and consistency via:</p>
+<ul class="simple">
+<li><p><strong>Black</strong> - formatting</p></li>
+<li><p><strong>Ruff</strong> - linting and import sorting</p></li>
+<li><p><strong>Mypy</strong> - type checking</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>check<span class="w">     </span><span class="c1"># Run all style and quality checks</span>
+make<span class="w"> </span>format<span class="w">    </span><span class="c1"># Auto-fix lint and formatting issues</span>
+</pre></div>
+</div>
+</section>
+<section id="commit-pull-request-guidelines">
+<h2>Commit &amp; Pull Request Guidelines<a class="headerlink" href="#commit-pull-request-guidelines" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Use clear, conventional commit messages</p></li>
+<li><p>Keep PRs small and focused</p></li>
+<li><p>Describe the change and link to any relevant issues</p></li>
+<li><p>Pass all CI checks before review</p></li>
+</ul>
+</section>
+<section id="maintainer">
+<h2>Maintainer<a class="headerlink" href="#maintainer" title="Link to this heading"></a></h2>
+<p>This project is developed and maintained by:</p>
+<p><strong>Roel Kist</strong>
+GitHub: <a class="reference external" href="https://github.com/roelkist">https://github.com/roelkist</a></p>
+</section>
+<section id="id3">
+<h2>License<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>All contributions are licensed under the MIT License.</p>
+</section>
+<hr class="docutils" />
+<section id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#repository-resolution">Repository Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#connect-and-use-a-repository">Connect and Use a Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#verify-access">Verify Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#credential-injection">Credential Injection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#repository-profile-example">Repository Profile Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+</div>
+</section>
+<hr class="docutils" />
+<section id="about">
+<h2>About<a class="headerlink" href="#about" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Author: Roel Kist</p></li>
+<li><p>License: MIT</p></li>
+<li><p>Version: 0.1.0</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="indices-and-tables">
+<h2>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2025 darca-repository Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
