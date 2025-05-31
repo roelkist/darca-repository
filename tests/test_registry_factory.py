@@ -1,8 +1,6 @@
 # tests/test_registry_factory.py
 # License: MIT
 
-import os
-
 import pytest
 
 from darca_repository.registry.factory import get_repository_registry
