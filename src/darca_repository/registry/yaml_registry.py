@@ -2,12 +2,13 @@
 # License: MIT
 
 import os
-import yaml
 from typing import Dict, List
 
+import yaml
+
+from darca_repository.exceptions import RepositoryNotFoundError
 from darca_repository.models import Repository
 from darca_repository.registry.base import RepositoryRegistry
-from darca_repository.exceptions import RepositoryNotFoundError
 
 
 class YamlRepositoryRegistry(RepositoryRegistry):
@@ -24,7 +25,9 @@ class YamlRepositoryRegistry(RepositoryRegistry):
     def _load_profiles(self) -> Dict[str, Repository]:
         profiles = {}
         if not os.path.isdir(self._directory):
-            raise FileNotFoundError(f"Repository directory does not exist: {self._directory}")
+            raise FileNotFoundError(
+                f"Repository directory does not exist: {self._directory}"
+            )
 
         for fname in os.listdir(self._directory):
             if not fname.endswith(".yaml"):
@@ -41,7 +44,9 @@ class YamlRepositoryRegistry(RepositoryRegistry):
         try:
             return self._profiles[name]
         except KeyError:
-            raise RepositoryNotFoundError(f"No repository named '{name}' found in {self._directory}.")
+            raise RepositoryNotFoundError(
+                f"No repository named '{name}' found in {self._directory}."
+            )
 
     def list_profiles(self) -> List[Repository]:
         return list(self._profiles.values())

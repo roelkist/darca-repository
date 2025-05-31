@@ -19,7 +19,7 @@ from src.darca_repository.__version__ import author, copyright, version
 
 # -- Project information -----------------------------------------------------
 
-project = "DARCA's storage abstraction for logical spaces."
+project = "darca-repository, a session-aware, credential-capable repository abstraction for structured storage backends."
 copyright = copyright
 author = author
 
@@ -36,7 +36,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.autodoc",
     "sphinxcontrib.plantuml",
-    'sphinx_autodoc_pydantic',
     "sphinx.ext.napoleon",
 ]
 

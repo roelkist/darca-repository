@@ -1,7 +1,7 @@
-Contributing to darca-space-manager
+Contributing to darca-repository
 ===================================
 
-Thanks for your interest in contributing to **darca-space-manager** — a project by `Roel Kist <https://github.com/roelkist>`_.
+Thanks for your interest in contributing to **darca-repository** — a project by `Roel Kist <https://github.com/roelkist>`_.
 
 We welcome issues, pull requests, questions, suggestions, and other contributions from the community.
 
@@ -12,8 +12,8 @@ Clone the project and set up the development environment:
 
 .. code-block:: bash
 
-   git clone https://github.com/roelkist/darca-space-manager.git
-   cd darca-space-manager
+   git clone https://github.com/roelkist/darca-repository.git
+   cd darca-repository
    make install
 
 This will create a virtual environment and install all dependencies needed for development, testing, and formatting.
@@ -52,9 +52,9 @@ Code Style
 
 This project enforces strict quality and consistency via:
 
-- **Black** – formatting
-- **Ruff** – linting and import sorting
-- **Mypy** – type checking
+- **Black** - formatting
+- **Ruff** - linting and import sorting
+- **Mypy** - type checking
 
 .. code-block:: bash
 

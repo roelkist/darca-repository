@@ -2,32 +2,34 @@
 # License: MIT
 
 import pytest
-import tempfile
-import shutil
-import os
 
-@pytest.fixture(scope="session")
-def temp_repo_dir():
-    dir_path = tempfile.mkdtemp(prefix="darca_repo_test_")
-    yield dir_path
-    shutil.rmtree(dir_path)
+from darca_repository.models import Repository, StorageScheme
 
 
 @pytest.fixture
-def repo_profile_file(temp_repo_dir):
-    yaml_content = """name: local-test-repo
-storage_url: file://{dir}/repo1
-scheme: file
-parameters:
-  base_path: "data"
-enabled: true
-""".format(dir=temp_repo_dir)
+def repository_no_credentials(tmp_path):
+    path = tmp_path / "darca_test_repo"
+    path.mkdir(parents=True, exist_ok=True)
 
-    os.makedirs(os.path.join(temp_repo_dir, "profiles"), exist_ok=True)
-    profile_path = os.path.join(temp_repo_dir, "profiles", "repo.yaml")
-    with open(profile_path, "w") as f:
-        f.write(yaml_content)
+    return Repository(
+        name="test-no-auth",
+        storage_url=f"file://{path}",
+        scheme=StorageScheme.FILE,
+        tags={"env": "test"},
+    )
 
-    os.environ["DARCA_REPOSITORY_MODE"] = "yaml"
-    os.environ["DARCA_REPOSITORY_PROFILE_DIR"] = os.path.join(temp_repo_dir, "profiles")
-    return profile_path
+
+@pytest.fixture
+def repository_with_credentials(tmp_path, monkeypatch):
+    monkeypatch.setenv("DUMMY_TOKEN", "secret123")
+    path = tmp_path / "darca_test_repo_secure"
+    path.mkdir(parents=True, exist_ok=True)
+
+    return Repository(
+        name="test-auth",
+        storage_url=f"file://{path}",
+        scheme=StorageScheme.FILE,
+        credentials={"token": "${DUMMY_TOKEN}"},
+        parameters={"cache": "false"},
+        tags={"secure": "yes"},
+    )

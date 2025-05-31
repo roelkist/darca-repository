@@ -1,10 +1,11 @@
 # models.py
 # License: MIT
 
-from typing import Optional, Dict
-from pydantic import BaseModel, SecretStr, Field
-from enum import Enum
 import os
+from enum import Enum
+from typing import Dict, Optional
+
+from pydantic import BaseModel, Field, SecretStr
 
 
 class StorageScheme(str, Enum):

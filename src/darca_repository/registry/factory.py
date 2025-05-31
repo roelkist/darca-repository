@@ -2,9 +2,11 @@
 # License: MIT
 
 import os
+
 from darca_repository.registry.base import RepositoryRegistry
+
+# from darca_repository.registry.mysql_registry import MySQLRepositoryRegistry
 from darca_repository.registry.yaml_registry import YamlRepositoryRegistry
-from darca_repository.registry.mysql_registry import MySQLRepositoryRegistry
 
 
 def get_repository_registry() -> RepositoryRegistry:
@@ -17,7 +19,7 @@ def get_repository_registry() -> RepositoryRegistry:
     if mode == "yaml":
         profile_dir = os.getenv(
             "DARCA_REPOSITORY_PROFILE_DIR",
-            os.path.expanduser("~/.local/share/darca_repository/profiles")
+            os.path.expanduser("~/.local/share/darca_repository/profiles"),
         )
         return YamlRepositoryRegistry(profile_dir)
 

@@ -2,32 +2,68 @@
 # License: MIT
 
 import pytest
-from darca_repository.models import Repository, StorageScheme
-from darca_repository.instance import RepositoryInstance
+
 from darca_repository.exceptions import RepositoryConnectionError
+from darca_repository.instance import RepositoryInstance
 
-@pytest.fixture
-def minimal_repository():
-    return Repository(
-        name="integration-repo",
-        storage_url="file:///tmp/test-repo",
-        scheme=StorageScheme.FILE,
-        parameters={"base_path": "test-data"}
-    )
 
 @pytest.mark.asyncio
-async def test_repository_instance_connection(minimal_repository):
-    instance = RepositoryInstance(minimal_repository)
+async def test_connect_without_credentials(repository_no_credentials):
+    instance = RepositoryInstance(repository_no_credentials)
     client = await instance.connect()
+
     assert client is not None
-    assert instance.client is client
-    assert await instance.test_connection()
+    assert client.session["repository_name"] == "test-no-auth"
+    assert client.session["scheme"] == "file"
+    assert client.session["tags"] == {"env": "test"}
+
+    ctx = client.context()
+    assert ctx["user"] is None
+    assert ctx["backend_type"] == "ScopedFileBackend"
+    assert ctx["credentials"] is None
+
 
 @pytest.mark.asyncio
-async def test_repository_write_and_read(minimal_repository):
-    instance = RepositoryInstance(minimal_repository)
+async def test_connect_with_credentials(repository_with_credentials):
+    instance = RepositoryInstance(repository_with_credentials)
     client = await instance.connect()
 
-    await client.write("foo.txt", "bar")
-    content = await client.read("foo.txt")
-    assert content == "bar"
+    assert client is not None
+    assert client.credentials["token"] == "secret123"
+    assert client.session["repository_name"] == "test-auth"
+    assert client.session["tags"] == {"secure": "yes"}
+
+    ctx = client.context()
+    assert "token" in client.credentials
+    assert ctx["credentials"]["token"] == "***"
+
+
+@pytest.mark.asyncio
+async def test_reconnect_is_idempotent(repository_no_credentials):
+    instance = RepositoryInstance(repository_no_credentials)
+    client1 = await instance.connect()
+    client2 = await instance.connect()
+    assert client1 is client2  # should reuse cached client
+
+
+@pytest.mark.asyncio
+async def test_test_connection_success(repository_no_credentials):
+    instance = RepositoryInstance(repository_no_credentials)
+    assert await instance.test_connection() is True
+
+
+@pytest.mark.asyncio
+async def test_connection_failure(monkeypatch, repository_no_credentials):
+    # Patch the factory to simulate connection failure
+    from darca_storage.factory import StorageConnectorFactory
+
+    async def broken_factory(*args, **kwargs):
+        raise RuntimeError("Simulated failure")
+
+    monkeypatch.setattr(StorageConnectorFactory, "from_url", broken_factory)
+
+    instance = RepositoryInstance(repository_no_credentials)
+    with pytest.raises(RepositoryConnectionError) as exc:
+        await instance.connect()
+
+    assert "Failed to connect to repository" in str(exc.value)

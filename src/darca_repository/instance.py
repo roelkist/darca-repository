@@ -1,13 +1,13 @@
 # instance.py
 # License: MIT
 
-from typing import Optional, Dict
+from typing import Dict, Optional
 
-from darca_storage.factory import StorageConnectorFactory
 from darca_storage.client import StorageClient
+from darca_storage.factory import StorageConnectorFactory
 
-from darca_repository.models import Repository
 from darca_repository.exceptions import RepositoryConnectionError
+from darca_repository.models import Repository
 
 
 class RepositoryInstance:
@@ -68,7 +68,10 @@ class RepositoryInstance:
         except Exception as e:
             raise RepositoryConnectionError(
                 name=self.name,
-                message=f"Failed to connect to repository '{self.name}' at {self._repository.storage_url}",
+                message=(
+                    f"Failed to connect to repository '{self.name}' "
+                    f"at {self._repository.storage_url}"
+                ),
                 cause=e,
             ) from e
 

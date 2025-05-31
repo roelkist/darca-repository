@@ -2,8 +2,9 @@
 # License: MIT
 
 from typing import List
-from darca_repository.registry.base import RepositoryRegistry
+
 from darca_repository.models import Repository
+from darca_repository.registry.base import RepositoryRegistry
 
 
 class MySQLRepositoryRegistry(RepositoryRegistry):
@@ -18,7 +19,9 @@ class MySQLRepositoryRegistry(RepositoryRegistry):
         self._connection_url = connection_url
         self._user = user
         self._password = password
-        raise NotImplementedError("MySQLRepositoryRegistry is not yet implemented.")
+        raise NotImplementedError(
+            "MySQLRepositoryRegistry is not yet implemented."
+        )
 
     def get_profile(self, name: str) -> Repository:
         raise NotImplementedError

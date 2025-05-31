@@ -1,4 +1,4 @@
-Darca File Utils - Maintainers
+Darca Repository - Maintainers
 ==============================
 
 This document lists the maintainers of the Darca File Utils project and outlines responsibilities

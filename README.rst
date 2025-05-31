@@ -1,7 +1,11 @@
 darca-repository
-===================
+================
 
-A repository 
+A session-aware, credential-capable repository abstraction for structured storage backends.
+
+`darca-repository` enables secure, pluggable resolution of storage spaces into active clients.
+It builds on `darca-storage` and provides a registry-driven mechanism to manage logical repositories
+with rich metadata, credential handling, and async file operations.
 
 |Build Status| |Deploy Status| |CodeCov| |Formatting| |License| |PyPi Version| |Docs|
 
@@ -24,10 +28,22 @@ A repository
    :target: https://roelkist.github.io/darca-repository/
    :alt: GitHub Pages
 
-🚀 Overview
------------
+Features
+--------
 
-**darca-repository** provides repository management.
+- ✅ Async-first storage repository resolution
+- 🔐 Credential injection via secrets or environment variables
+- 🔄 Session metadata propagation for observability
+- 🔌 Pluggable registry backends (YAML, SQL-ready)
+- 🔎 Clean interface for probing, connecting, and verifying access
+
+Requirements
+------------
+
+- Python >= 3.9
+- darca-storage
+- pydantic
+- PyYAML (if using YAML-based registries)
 
 📦 Installation
 ---------------
@@ -41,6 +57,41 @@ Or using Poetry:
 .. code-block:: bash
 
    poetry add darca-repository
+
+Quick Usage
+-----------
+
+.. code-block:: python
+
+    from darca_repository.instance import RepositoryInstance
+    from darca_repository.registry.factory import get_repository_registry
+
+    registry = get_repository_registry()
+    profile = registry.get_profile("my-space")
+
+    repo = RepositoryInstance(profile)
+    client = await repo.connect()
+
+    await client.write("hello.txt", content="Hello, Darca!")
+
+Repository Format (YAML)
+------------------------
+
+Example YAML file (`workspace-main.yaml`):
+
+.. code-block:: yaml
+
+    name: workspace-main
+    storage_url: file:///var/data/workspace
+    scheme: file
+    credentials:
+      token: ${DARCA_TOKEN}
+    parameters:
+      cache: "false"
+    tags:
+      env: production
+    enabled: true
+    priority: 10
 
 
 📚 Documentation
