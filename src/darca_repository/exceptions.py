@@ -32,6 +32,22 @@ class RepositoryNotFound(RepositoryException):
             metadata={"repository": name},
         )
 
+class RepositoryNotFoundError(RepositoryException):
+    def __init__(self, name: str):
+        super().__init__(
+            message=f"Repository '{name}' not found.",
+            error_code="REPOSITORY_NOT_FOUND_ERROR",
+            metadata={"repository": name},
+        )
+
+class RepositoryConnectionError(RepositoryException):
+    def __init__(self, name: str, *, message: str = None, cause: Exception = None):
+        super().__init__(
+            message=message or f"Connection failed to repository '{name}'.",
+            error_code="REPOSITORY_CONNECTION_ERROR",
+            metadata={"repository": name},
+            cause=cause,
+        )
 
 class RepositoryAccessDenied(RepositoryException):
     def __init__(self, name: str, user: str | None = None):

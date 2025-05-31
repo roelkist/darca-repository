@@ -1,4 +1,4 @@
-from darca_space_manager import __version__
+from darca_repository import __version__
 
 
 def test_version_attributes_are_strings():
