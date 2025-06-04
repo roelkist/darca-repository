@@ -25,9 +25,7 @@ class YamlRepositoryRegistry(RepositoryRegistry):
     def _load_profiles(self) -> Dict[str, Repository]:
         profiles = {}
         if not os.path.isdir(self._directory):
-            raise FileNotFoundError(
-                f"Repository directory does not exist: {self._directory}"
-            )
+            raise FileNotFoundError(f"Repository directory does not exist: {self._directory}")
 
         for fname in os.listdir(self._directory):
             if not fname.endswith(".yaml"):
@@ -35,10 +33,17 @@ class YamlRepositoryRegistry(RepositoryRegistry):
             path = os.path.join(self._directory, fname)
             with open(path, "r") as f:
                 data = yaml.safe_load(f)
+                if not isinstance(data, dict):
+                    continue  # skip empty or invalid YAML files
                 profile = Repository(**data)
                 profiles[profile.name] = profile
 
         return profiles
+
+    def _save_profile(self, repository: Repository) -> None:
+        path = os.path.join(self._directory, f"{repository.name}.yaml")
+        with open(path, "w") as f:
+            yaml.safe_dump(repository.model_dump(mode="json"), f)
 
     def get_profile(self, name: str) -> Repository:
         try:
@@ -50,3 +55,16 @@ class YamlRepositoryRegistry(RepositoryRegistry):
 
     def list_profiles(self) -> List[Repository]:
         return list(self._profiles.values())
+
+    def add_profile(self, repository: Repository) -> None:
+        self._profiles[repository.name] = repository
+        self._save_profile(repository)
+
+    def remove_profile(self, name: str) -> None:
+        if name not in self._profiles:
+            raise RepositoryNotFoundError(name)
+        
+        del self._profiles[name]
+        path = os.path.join(self._directory, f"{name}.yaml")
+        if os.path.exists(path):
+            os.remove(path)
