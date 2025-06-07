@@ -53,7 +53,7 @@ class RepositoryInstance:
                 "repository_name": self._repository.name,
                 "storage_url": self._repository.connection.storage_url,
                 "scheme": self._repository.connection.scheme.value,
-                "tags": self._repository.tags or {},  # ✅ FIXED LINE
+                "tags": self._repository.tags or {},  
             }
 
             self._client = await StorageConnectorFactory.from_url(
