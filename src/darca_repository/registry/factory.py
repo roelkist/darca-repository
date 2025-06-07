@@ -1,11 +1,9 @@
-# registry/factory.py
-# License: MIT
+# src/darca_repository/registry/factory.py
 
 import os
+from importlib.metadata import entry_points
 
 from darca_repository.registry.base import RepositoryRegistry
-
-# from darca_repository.registry.mysql_registry import MySQLRepositoryRegistry
 from darca_repository.registry.yaml_registry import YamlRepositoryRegistry
 
 
@@ -16,6 +14,11 @@ def get_repository_registry() -> RepositoryRegistry:
     """
     mode = os.getenv("DARCA_REPOSITORY_MODE", "yaml").lower()
 
+    # Entry-point plugin loading
+    for entry_point in entry_points(group="darca_repository.registries"):
+        if entry_point.name == mode:
+            return entry_point.load()()
+
     if mode == "yaml":
         profile_dir = os.getenv(
             "DARCA_REPOSITORY_PROFILE_DIR",
@@ -25,10 +28,5 @@ def get_repository_registry() -> RepositoryRegistry:
 
     if mode == "mysql":
         raise NotImplementedError("MySQL registry is not implemented.")
-        # return MySQLRepositoryRegistry(
-        #     connection_url=os.getenv("DARCA_REPOSITORY_DB_URL"),
-        #     user=os.getenv("DARCA_REPOSITORY_DB_USER"),
-        #     password=os.getenv("DARCA_REPOSITORY_DB_PASSWORD"),
-        # )
 
     raise ValueError(f"Unsupported DARCA_REPOSITORY_MODE: {mode}")

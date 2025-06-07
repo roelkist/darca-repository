@@ -2,7 +2,6 @@
 
 from darca_repository.exceptions import (
     RepositoryException,
-    RepositoryNotFound,
     RepositoryNotFoundError,
     RepositoryConnectionError,
     RepositoryAccessDenied,
@@ -14,12 +13,6 @@ def test_repository_exception_base():
     exc = RepositoryException("Generic failure", metadata={"key": "value"})
     assert exc.message == "Generic failure"
     assert exc.metadata["key"] == "value"
-
-
-def test_repository_not_found():
-    exc = RepositoryNotFound(name="demo")
-    assert exc.error_code == "REPOSITORY_NOT_FOUND"
-    assert "demo" in str(exc)
 
 
 def test_repository_not_found_error():

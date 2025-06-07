@@ -10,17 +10,20 @@ from darca_repository.registry.yaml_registry import YamlRepositoryRegistry
 
 @pytest.fixture
 def sample_registry_dir(tmp_path):
-    # Create a temporary YAML profile
     profile_dir = tmp_path / "profiles"
     profile_dir.mkdir()
 
     repo_path = profile_dir / "demo.yaml"
     yaml_content = {
         "name": "demo",
-        "storage_url": "file:///data/demo",
-        "scheme": "file",
-        "tags": {"tier": "test"},
-        "parameters": {},
+        "connection": {
+            "storage_url": "file:///data/demo",
+            "scheme": "file",
+            "tags": {"tier": "test"},
+            "parameters": {}
+        },
+        "enabled": True,
+        "priority": None
     }
 
     with open(repo_path, "w") as f:
@@ -35,13 +38,14 @@ def test_load_profiles(sample_registry_dir):
 
     assert len(profiles) == 1
     assert profiles[0].name == "demo"
-    assert profiles[0].scheme.value == "file"
+    assert profiles[0].connection.scheme.value == "file"
 
 
 def test_get_existing_profile(sample_registry_dir):
     registry = YamlRepositoryRegistry(str(sample_registry_dir))
     profile = registry.get_profile("demo")
     assert profile.name == "demo"
+    assert profile.connection.storage_url.startswith("file://")
 
 
 def test_get_missing_profile(sample_registry_dir):

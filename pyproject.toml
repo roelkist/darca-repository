@@ -13,6 +13,8 @@ pydantic = "^2.11.4"
 typing-extensions = "^4.13.2" 
 darca-exception = "^0.1.1"
 darca-storage = "^0.0.1"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.3"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -28,6 +30,7 @@ mypy-extensions = "^1.0.0"
 pre-commit = "^4.1.0"
 coverage-badge = "^1.1.2"
 pytest-asyncio = "^1.0.0"
+httpx = "^0.28.1"
 
 
 [tool.poetry.group.docs.dependencies]

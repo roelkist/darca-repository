@@ -1,8 +1,10 @@
-name: test-local-repo
-storage_url: file:///tmp/darca-test-repo
-scheme: file
+name: test_local_repo
+connection:
+  storage_url: file:///tmp/darca-test-repo
+  scheme: file
+  parameters: {}
+  tags:
+    env: test
 credentials: null
-parameters: {}
-tags:
-  env: test
 enabled: true
+priority: null

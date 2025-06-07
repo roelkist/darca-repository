@@ -1,0 +1,9 @@
+connection:
+  credentials: null
+  parameters: {}
+  scheme: file
+  storage_url: file:///tmp/pytest-of-rokist/pytest-75/popen-gw6/test_add_repository0/add-test
+enabled: true
+name: test_add
+priority: null
+tags: null

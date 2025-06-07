@@ -1,4 +1,4 @@
-# instance.py
+# src/darca_repository/instance.py
 # License: MIT
 
 from typing import Dict, Optional
@@ -44,23 +44,23 @@ class RepositoryInstance:
             # Resolve credentials from secrets
             raw_credentials: Dict[str, str] = {
                 k: self._repository.get_secret(k)
-                for k in (self._repository.credentials or {})
+                for k in (self._repository.connection.credentials or {})
                 if self._repository.get_secret(k) is not None
             }
 
             # Build session metadata context
             session_metadata = {
                 "repository_name": self._repository.name,
-                "storage_url": self._repository.storage_url,
-                "scheme": self._repository.scheme.value,
-                "tags": self._repository.tags,
+                "storage_url": self._repository.connection.storage_url,
+                "scheme": self._repository.connection.scheme.value,
+                "tags": self._repository.tags or {},  # ✅ FIXED LINE
             }
 
             self._client = await StorageConnectorFactory.from_url(
-                url=self._repository.storage_url,
+                url=self._repository.connection.storage_url,
                 session_metadata=session_metadata,
                 credentials=raw_credentials,
-                parameters=self._repository.parameters,
+                parameters=self._repository.connection.parameters,
             )
 
             return self._client
@@ -70,7 +70,7 @@ class RepositoryInstance:
                 name=self.name,
                 message=(
                     f"Failed to connect to repository '{self.name}' "
-                    f"at {self._repository.storage_url}"
+                    f"at {self._repository.connection.storage_url}"
                 ),
                 cause=e,
             ) from e

@@ -2,7 +2,7 @@
 # License: MIT
 
 import os
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import yaml
 
@@ -20,12 +20,14 @@ class YamlRepositoryRegistry(RepositoryRegistry):
 
     def __init__(self, directory: str):
         self._directory = os.path.abspath(directory)
-        self._profiles: Dict[str, Repository] = self._load_profiles()
+        self._profiles: Dict[str, Repository] = {}
+        self._load_profiles()
 
-    def _load_profiles(self) -> Dict[str, Repository]:
-        profiles = {}
+    def _load_profiles(self) -> None:
         if not os.path.isdir(self._directory):
             raise FileNotFoundError(f"Repository directory does not exist: {self._directory}")
+
+        self._profiles.clear()
 
         for fname in os.listdir(self._directory):
             if not fname.endswith(".yaml"):
@@ -36,9 +38,13 @@ class YamlRepositoryRegistry(RepositoryRegistry):
                 if not isinstance(data, dict):
                     continue  # skip empty or invalid YAML files
                 profile = Repository(**data)
-                profiles[profile.name] = profile
+                self._profiles[profile.name] = profile
 
-        return profiles
+    def reload(self) -> None:
+        """
+        Explicitly reload all profiles from disk.
+        """
+        self._load_profiles()
 
     def _save_profile(self, repository: Repository) -> None:
         path = os.path.join(self._directory, f"{repository.name}.yaml")
@@ -53,8 +59,13 @@ class YamlRepositoryRegistry(RepositoryRegistry):
                 f"No repository named '{name}' found in {self._directory}."
             )
 
-    def list_profiles(self) -> List[Repository]:
-        return list(self._profiles.values())
+    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[Repository]:
+        profiles = self._profiles.values()
+        if enabled_only:
+            profiles = filter(lambda r: r.enabled, profiles)
+        if tag:
+            profiles = filter(lambda r: r.tags and tag in r.tags, profiles)
+        return list(profiles)
 
     def add_profile(self, repository: Repository) -> None:
         self._profiles[repository.name] = repository
@@ -63,7 +74,7 @@ class YamlRepositoryRegistry(RepositoryRegistry):
     def remove_profile(self, name: str) -> None:
         if name not in self._profiles:
             raise RepositoryNotFoundError(name)
-        
+
         del self._profiles[name]
         path = os.path.join(self._directory, f"{name}.yaml")
         if os.path.exists(path):

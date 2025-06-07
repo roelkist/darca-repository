@@ -1,3 +1,5 @@
+# tests/cli.py
+
 import typer
 import requests
 import rich
