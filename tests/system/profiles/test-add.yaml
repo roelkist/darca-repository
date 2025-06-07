@@ -1,0 +1,9 @@
+credentials: null
+enabled: true
+name: test-add
+parameters: {}
+priority: null
+scheme: file
+storage_url: file:///tmp/pytest-of-rokist/pytest-65/popen-gw6/test_add_repository0/add-test
+tags:
+  added: 'yes'
