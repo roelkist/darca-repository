@@ -7,11 +7,11 @@ from typing import Dict, List, Optional
 import yaml
 
 from darca_repository.exceptions import RepositoryNotFoundError
-from darca_repository.models import Repository
-from darca_repository.registry.base import RepositoryRegistry
+from darca_repository.registry.models import RegistryProfile
+from darca_repository.registry.interfaces import Registry
 
 
-class YamlRepositoryRegistry(RepositoryRegistry):
+class YamlRegistry(Registry):
     """
     Loads repository profiles from a YAML directory.
 
@@ -20,7 +20,7 @@ class YamlRepositoryRegistry(RepositoryRegistry):
 
     def __init__(self, directory: str):
         self._directory = os.path.abspath(directory)
-        self._profiles: Dict[str, Repository] = {}
+        self._profiles: Dict[str, RegistryProfile] = {}
         self._load_profiles()
 
     def _load_profiles(self) -> None:
@@ -37,7 +37,7 @@ class YamlRepositoryRegistry(RepositoryRegistry):
                 data = yaml.safe_load(f)
                 if not isinstance(data, dict):
                     continue  # skip empty or invalid YAML files
-                profile = Repository(**data)
+                profile = RegistryProfile(**data)
                 self._profiles[profile.name] = profile
 
     def reload(self) -> None:
@@ -46,12 +46,12 @@ class YamlRepositoryRegistry(RepositoryRegistry):
         """
         self._load_profiles()
 
-    def _save_profile(self, repository: Repository) -> None:
+    def _save_profile(self, repository: RegistryProfile) -> None:
         path = os.path.join(self._directory, f"{repository.name}.yaml")
         with open(path, "w") as f:
             yaml.safe_dump(repository.model_dump(mode="json"), f)
 
-    def get_profile(self, name: str) -> Repository:
+    def get_profile(self, name: str) -> RegistryProfile:
         try:
             return self._profiles[name]
         except KeyError:
@@ -59,7 +59,7 @@ class YamlRepositoryRegistry(RepositoryRegistry):
                 f"No repository named '{name}' found in {self._directory}."
             )
 
-    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[Repository]:
+    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[RegistryProfile]:
         profiles = self._profiles.values()
         if enabled_only:
             profiles = filter(lambda r: r.enabled, profiles)
@@ -67,7 +67,7 @@ class YamlRepositoryRegistry(RepositoryRegistry):
             profiles = filter(lambda r: r.tags and tag in r.tags, profiles)
         return list(profiles)
 
-    def add_profile(self, repository: Repository) -> None:
+    def add_profile(self, repository: RegistryProfile) -> None:
         self._profiles[repository.name] = repository
         self._save_profile(repository)
 

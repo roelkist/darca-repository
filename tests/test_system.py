@@ -3,6 +3,7 @@
 import pytest
 from darca_repository.models import Repository, StorageScheme, RepositoryConnectionInfo
 from darca_repository.instance import RepositoryInstance
+from darca_repository.server.service import clear_instance_cache
 
 @pytest.mark.asyncio
 async def test_repository_instance_connection(tmp_path):
@@ -47,6 +48,10 @@ def test_repository_connection_failure(monkeypatch, client):
         raise RuntimeError("Simulated failure")
 
     monkeypatch.setattr(StorageConnectorFactory, "from_url", broken_factory)
+
+    # 💡 Force instance cache reset
+    import asyncio
+    asyncio.run(clear_instance_cache("test_local_repo"))
 
     response = client.get("/repositories/test_local_repo/test")
     assert response.status_code == 500

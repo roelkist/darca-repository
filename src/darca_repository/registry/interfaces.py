@@ -4,10 +4,10 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from darca_repository.models import Repository
+from darca_repository.registry.models import RegistryProfile
 
 
-class RepositoryRegistry(ABC):
+class Registry(ABC):
     """
     Abstract interface for loading and managing repository profiles.
 
@@ -18,7 +18,7 @@ class RepositoryRegistry(ABC):
     """
 
     @abstractmethod
-    def get_profile(self, name: str) -> Repository:
+    def get_profile(self, name: str) -> RegistryProfile:
         """
         Retrieve a single repository profile by its name.
 
@@ -28,7 +28,7 @@ class RepositoryRegistry(ABC):
         ...
 
     @abstractmethod
-    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[Repository]:
+    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[RegistryProfile]:
         """
         Return a list of all available repository profiles.
 
@@ -39,7 +39,7 @@ class RepositoryRegistry(ABC):
         ...
 
     @abstractmethod
-    def add_profile(self, repository: Repository) -> None:
+    def add_profile(self, repository: RegistryProfile) -> None:
         """
         Add or overwrite a repository profile.
         """

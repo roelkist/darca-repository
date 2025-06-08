@@ -66,3 +66,20 @@ class RepositoryValidationError(RepositoryException):
             metadata=None,
             cause=cause,
         )
+
+class RepositoryNotConnectedError(RepositoryException):
+    def __init__(self, name: str):
+        super().__init__(
+            message=f"Repository '{name}' is not connected.",
+            error_code="REPOSITORY_NOT_CONNECTED",
+            metadata={"repository": name},
+        )
+
+
+class RepositoryIOError(RepositoryException):
+    def __init__(self, message: str, *, cause: Optional[Exception] = None):
+        super().__init__(
+            message=message,
+            error_code="REPOSITORY_IO_ERROR",
+            cause=cause,
+        )

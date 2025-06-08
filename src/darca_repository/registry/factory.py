@@ -3,13 +3,13 @@
 import os
 from importlib.metadata import entry_points
 
-from darca_repository.registry.base import RepositoryRegistry
-from darca_repository.registry.yaml_registry import YamlRepositoryRegistry
+from darca_repository.registry.interfaces import Registry
+from darca_repository.registry.yaml_registry import YamlRegistry
 
 
-def get_repository_registry() -> RepositoryRegistry:
+def get_repository_registry() -> Registry:
     """
-    Factory to instantiate the appropriate RepositoryRegistry backend
+    Factory to instantiate the appropriate Registry backend
     based on the DARCA_REPOSITORY_MODE environment variable.
     """
     mode = os.getenv("DARCA_REPOSITORY_MODE", "yaml").lower()
@@ -24,9 +24,16 @@ def get_repository_registry() -> RepositoryRegistry:
             "DARCA_REPOSITORY_PROFILE_DIR",
             os.path.expanduser("~/.local/share/darca_repository/profiles"),
         )
-        return YamlRepositoryRegistry(profile_dir)
+        return YamlRegistry(profile_dir)
 
     if mode == "mysql":
-        raise NotImplementedError("MySQL registry is not implemented.")
+        from darca_repository.registry.mysql_registry import MySQLRegistry
+
+        host = os.getenv("DARCA_REPOSITORY_MYSQL_HOST", "localhost")
+        user = os.getenv("DARCA_REPOSITORY_MYSQL_USER", "darca_user")
+        database = os.getenv("DARCA_REPOSITORY_MYSQL_DATABASE", "darca_database")
+        password = os.getenv("DARCA_REPOSITORY_MYSQL_PASSWORD", "darca_password")
+        url = f"{host}/{database}"
+        return MySQLRegistry(connection_url=url, user=user, password=password)
 
     raise ValueError(f"Unsupported DARCA_REPOSITORY_MODE: {mode}")
