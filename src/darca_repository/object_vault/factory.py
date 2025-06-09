@@ -1,28 +1,20 @@
-import os
-from object_vault.interfaces import ObjectVault
-from darca_repository.object_vault.yaml_object_vault import YamlObjectVault
+from darca_repository.object_vault.interfaces import ObjectVault
+from darca_repository.config import get_config
 
 
 def get_object_vault() -> ObjectVault:
     """
-    Factory to resolve and return the configured ObjectVault implementation.
+    Factory for ObjectVault backend selection.
     """
-    mode = os.getenv("DARCA_OBJECT_VAULT_MODE", "yaml").lower()
+    cfg = get_config()
+    mode = cfg.object_vault_mode
 
     if mode == "yaml":
-        directory = os.getenv(
-            "DARCA_OBJECT_VAULT_DIR",
-            os.path.expanduser("~/.local/share/darca_repository/objects"),
-        )
-        return YamlObjectVault(directory)
+        from darca_repository.object_vault.yaml_object_vault import YamlObjectVault
+        return YamlObjectVault(base_path=cfg.object_vault_dir)
 
     if mode == "mysql":
-        from object_vault.mysql_object_vault import MySQLObjectVault
-        host = os.getenv("DARCA_OBJECT_MYSQL_HOST", "localhost")
-        user = os.getenv("DARCA_OBJECT_MYSQL_USER", "darca_user")
-        password = os.getenv("DARCA_OBJECT_MYSQL_PASSWORD", "darca_password")
-        database = os.getenv("DARCA_OBJECT_MYSQL_DATABASE", "darca_objects")
-        url = f"mysql+asyncmy://{user}:{password}@{host}/{database}"
-        return MySQLObjectVault(connection_url=url)
+        from darca_repository.object_vault.mysql_object_vault import MySQLObjectVault
+        return MySQLObjectVault()
 
-    raise ValueError(f"Unsupported DARCA_OBJECT_VAULT_MODE: {mode}")
+    raise ValueError(f"Unsupported object vault mode: {mode}")

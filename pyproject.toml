@@ -19,6 +19,8 @@ typer = "^0.16.0"
 rich = "^14.0.0"
 sqlalchemy = "^2.0.41"
 pymysql = "^1.1.1"
+aiofiles = "^24.1.0"
+asyncmy = "^0.2.10"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -60,3 +62,5 @@ asyncio_default_test_loop_scope = "function"
 
 [tool.poetry.scripts]
 darca-registry-cli = "darca_repository.registry.cli:app"
+darca-repository-vault-cli = "darca_repository.repository_vault.cli:app"
+darca-object-vault-cli = "darca_repository.object_vault.cli:app"

@@ -27,14 +27,14 @@ class DarcaRepositoryConfig:
 
     def __init__(self):
         # DB connection parts
-        self.mysql_host = os.getenv("DARCA_MYSQL_HOST", "localhost")
-        self.mysql_user = os.getenv("DARCA_MYSQL_USER", "darca_user")
-        self.mysql_password = os.getenv("DARCA_MYSQL_PASSWORD", "darca_password")
-        self.mysql_database = os.getenv("DARCA_MYSQL_DATABASE", "darca_database")
+        self.mysql_host = os.getenv("DARCA_REPOSITORY_MYSQL_HOST", "localhost")
+        self.mysql_user = os.getenv("DARCA_REPOSITORY_MYSQL_USER", "darca_user")
+        self.mysql_password = os.getenv("DARCA_REPOSITORY_MYSQL_PASSWORD", "darca_password")
+        self.mysql_database = os.getenv("DARCA_REPOSITORY_MYSQL_DATABASE", "darca_database")
 
         # Backend modes
-        self.repository_vault_mode = os.getenv("DARCA_REPOSITORY_VAULT_MODE", "yaml").lower()
-        self.object_vault_mode = os.getenv("DARCA_OBJECT_VAULT_MODE", "yaml").lower()
+        self.repository_vault_mode = os.getenv("DARCA_REPOSITORY_MODE", "yaml").lower()
+        self.object_vault_mode = os.getenv("DARCA_REPOSITORY_MODE", "yaml").lower()
         self.registry_mode = os.getenv("DARCA_REPOSITORY_MODE", "yaml").lower()
 
         # File/YAML base paths

@@ -83,3 +83,18 @@ class RepositoryIOError(RepositoryException):
             error_code="REPOSITORY_IO_ERROR",
             cause=cause,
         )
+
+
+class RepositoryAlreadyExistsError(Exception):
+    def __init__(self, name: str):
+        super().__init__(f"Repository '{name}' already exists.")
+
+
+class ObjectNotFoundError(Exception):
+    def __init__(self, repository_name: str, object_path: str):
+        super().__init__(f"Object '{object_path}' not found in repository '{repository_name}'.")
+
+
+class ObjectAlreadyExistsError(Exception):
+    def __init__(self, repository_name: str, object_path: str):
+        super().__init__(f"Object '{object_path}' already exists in repository '{repository_name}'.")

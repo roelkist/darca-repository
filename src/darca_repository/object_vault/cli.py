@@ -1,3 +1,4 @@
+import asyncio
 import json
 import typer
 from rich import print
@@ -10,7 +11,11 @@ app = typer.Typer(help="DARCA Object Vault CLI")
 
 
 @app.command("list")
-async def list_objects(repository: str):
+def list_objects(repository: str):
+    asyncio.run(_list_objects(repository))
+
+
+async def _list_objects(repository: str):
     vault = get_object_vault()
     objects = await vault.list_objects(repository)
     if not objects:
@@ -21,7 +26,11 @@ async def list_objects(repository: str):
 
 
 @app.command("get")
-async def get_object(repository: str, path: str):
+def get_object(repository: str, path: str):
+    asyncio.run(_get_object(repository, path))
+
+
+async def _get_object(repository: str, path: str):
     vault = get_object_vault()
     try:
         obj = await vault.get_object(repository, path)
@@ -31,12 +40,16 @@ async def get_object(repository: str, path: str):
 
 
 @app.command("add")
-async def add_object(
+def add_object(
     repository: str = typer.Option(..., help="Target repository"),
     path: str = typer.Option(..., help="Object path"),
     type: Optional[str] = typer.Option(None, help="Type of object"),
     metadata: Optional[str] = typer.Option(None, help="Metadata as JSON string"),
 ):
+    asyncio.run(_add_object(repository, path, type, metadata))
+
+
+async def _add_object(repository: str, path: str, type: Optional[str], metadata: Optional[str]):
     vault = get_object_vault()
     meta_dict = json.loads(metadata) if metadata else None
     await vault.add_object(repository, path, type=type, metadata=meta_dict)
@@ -44,7 +57,11 @@ async def add_object(
 
 
 @app.command("remove")
-async def remove_object(repository: str, path: str):
+def remove_object(repository: str, path: str):
+    asyncio.run(_remove_object(repository, path))
+
+
+async def _remove_object(repository: str, path: str):
     vault = get_object_vault()
     try:
         await vault.remove_object(repository, path)
@@ -54,14 +71,22 @@ async def remove_object(repository: str, path: str):
 
 
 @app.command("update-type")
-async def update_type(repository: str, path: str, type: Optional[str]):
+def update_type(repository: str, path: str, type: Optional[str]):
+    asyncio.run(_update_type(repository, path, type))
+
+
+async def _update_type(repository: str, path: str, type: Optional[str]):
     vault = get_object_vault()
     await vault.update_type(repository, path, type)
     print(f"[green]Type updated for object '{path}' in '{repository}'.[/green]")
 
 
 @app.command("update-metadata")
-async def update_metadata(repository: str, path: str, metadata: str):
+def update_metadata(repository: str, path: str, metadata: str):
+    asyncio.run(_update_metadata(repository, path, metadata))
+
+
+async def _update_metadata(repository: str, path: str, metadata: str):
     vault = get_object_vault()
     meta_dict = json.loads(metadata)
     await vault.update_metadata(repository, path, meta_dict)
@@ -69,7 +94,11 @@ async def update_metadata(repository: str, path: str, metadata: str):
 
 
 @app.command("touch")
-async def touch_object(repository: str, path: str):
+def touch_object(repository: str, path: str):
+    asyncio.run(_touch_object(repository, path))
+
+
+async def _touch_object(repository: str, path: str):
     vault = get_object_vault()
     await vault.touch_object(repository, path)
     print(f"[green]Object '{path}' in '{repository}' touched.[/green]")
