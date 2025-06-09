@@ -15,8 +15,9 @@ class StorageScheme(str, Enum):
 class RegistryProfile(BaseModel):
     """Describes how to connect to a storage backend."""
     name: str
+    profile_id: Optional[int] = None
     storage_url: str
-    scheme: Optional[StorageScheme] = None  # Now optional
+    scheme: Optional[StorageScheme] = None 
     credentials: Optional[Dict[str, SecretStr]] = None
     parameters: Dict[str, str] = Field(default_factory=dict)
     enabled: bool = True

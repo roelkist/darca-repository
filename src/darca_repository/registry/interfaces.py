@@ -1,4 +1,4 @@
-# registry/base.py
+# registry/interfaces.py
 # License: MIT
 
 from abc import ABC, abstractmethod
