@@ -19,14 +19,13 @@ class Base(DeclarativeBase):
 class RepositoryTable(Base):
     __tablename__ = "repositories"
 
-    repository_name: Mapped[str] = mapped_column(primary_key=True)
-    description: Mapped[Optional[str]]
+    repository_name: Mapped[str] = mapped_column(sa.String(255), primary_key=True)
+    description: Mapped[Optional[str]] = mapped_column(sa.String(255))
     tags: Mapped[Optional[List[str]]] = mapped_column(sa.JSON)
     priority: Mapped[Optional[int]]
-    creation_time: Mapped[str]
-    modification_time: Mapped[str]
+    creation_time: Mapped[str] = mapped_column(sa.String(64))
+    modification_time: Mapped[str] = mapped_column(sa.String(64))
     repository_id: Mapped[Optional[int]] = mapped_column(sa.Integer, autoincrement=True)
-
 
 class MySQLRepositoryVault(RepositoryVault):
     def __init__(self):
@@ -42,32 +41,7 @@ class MySQLRepositoryVault(RepositoryVault):
                 await conn.run_sync(Base.metadata.create_all)
             self._schema_initialized = True
 
-    async def get_repository(self, name: str) -> Repository:
-        async with self._sessionmaker() as session:
-            stmt = sa.select(RepositoryTable).where(RepositoryTable.repository_name == name)
-            result = await session.execute(stmt)
-            row = result.scalar_one_or_none()
-            if row is None:
-                raise RepositoryNotFoundError(name)
-            return self._to_model(row)
-
-    async def list_repositories(self, tag: Optional[str] = None) -> List[Repository]:
-        async with self._sessionmaker() as session:
-            stmt = sa.select(RepositoryTable)
-            result = await session.execute(stmt)
-            rows = result.scalars().all()
-            if tag:
-                rows = [r for r in rows if r.tags and tag in r.tags]
-            return [self._to_model(r) for r in rows]
-
-    async def create_repository(
-        self,
-        name: str,
-        *,
-        description: Optional[str] = None,
-        tags: Optional[List[str]] = None,
-        priority: Optional[int] = None,
-    ) -> None:
+    async def create_repository(self, name: str, *, description=None, tags=None, priority=None):
         now = datetime.utcnow().isoformat()
         repo = RepositoryTable(
             repository_name=name,
@@ -88,6 +62,34 @@ class MySQLRepositoryVault(RepositoryVault):
             else:
                 raise
 
+    async def get_repository(self, name: str) -> Repository:
+        try:
+            async with self._sessionmaker() as session:
+                stmt = sa.select(RepositoryTable).where(RepositoryTable.repository_name == name)
+                result = await session.execute(stmt)
+                row = result.scalar_one_or_none()
+                if row is None:
+                    raise RepositoryNotFoundError(name)
+                return self._to_model(row)
+        except ProgrammingError as e:
+            if "doesn't exist" in str(e).lower():
+                raise RepositoryNotFoundError(name)
+            raise
+
+    async def list_repositories(self, tag: Optional[str] = None) -> List[Repository]:
+        try:
+            async with self._sessionmaker() as session:
+                stmt = sa.select(RepositoryTable)
+                result = await session.execute(stmt)
+                rows = result.scalars().all()
+                if tag:
+                    rows = [r for r in rows if r.tags and tag in r.tags]
+                return [self._to_model(r) for r in rows]
+        except ProgrammingError as e:
+            if "doesn't exist" in str(e).lower():
+                return []
+            raise
+
     async def remove_repository(self, name: str) -> None:
         async with self._sessionmaker() as session:
             stmt = sa.delete(RepositoryTable).where(RepositoryTable.repository_name == name)
@@ -107,14 +109,19 @@ class MySQLRepositoryVault(RepositoryVault):
 
     async def _update_field(self, name: str, updates: dict) -> None:
         updates["modification_time"] = datetime.utcnow().isoformat()
-        async with self._sessionmaker() as session:
-            stmt = sa.update(RepositoryTable).where(
-                RepositoryTable.repository_name == name
-            ).values(**updates)
-            result = await session.execute(stmt)
-            if result.rowcount == 0:
+        try:
+            async with self._sessionmaker() as session:
+                stmt = sa.update(RepositoryTable).where(
+                    RepositoryTable.repository_name == name
+                ).values(**updates)
+                result = await session.execute(stmt)
+                if result.rowcount == 0:
+                    raise RepositoryNotFoundError(name)
+                await session.commit()
+        except ProgrammingError as e:
+            if "doesn't exist" in str(e).lower():
                 raise RepositoryNotFoundError(name)
-            await session.commit()
+            raise
 
     def _to_model(self, row: RepositoryTable) -> Repository:
         return Repository(

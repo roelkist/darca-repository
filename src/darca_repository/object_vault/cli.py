@@ -7,6 +7,44 @@ from typing import Optional
 from darca_repository.object_vault.factory import get_object_vault
 from darca_repository.exceptions import ObjectNotFoundError
 
+"""
+export DARCA_REPOSITORY_MODE=mysql
+export DARCA_REPOSITORY_MYSQL_HOST=mysql-darca-repository:3306
+export DARCA_REPOSITORY_MYSQL_USER=darca_user
+export DARCA_REPOSITORY_MYSQL_PASSWORD=darca_password
+export DARCA_REPOSITORY_MYSQL_DATABASE=darca_database
+
+or 
+export DARCA_REPOSITORY_MODE=yaml
+
+# Add Objects
+darca-object-vault-cli add --repository test-repo-1 --path /obj/1.txt --type document --metadata '{"size": 123, "owner": "alice"}'
+darca-object-vault-cli add --repository test-repo-1 --path /obj/2.txt --type image --metadata '{"resolution": "1080p"}'
+
+# List Objects
+darca-object-vault-cli list test-repo-1
+
+# Get Object
+darca-object-vault-cli get test-repo-1 /obj/1.txt
+
+# Update Object Fields
+darca-object-vault-cli update-type test-repo-1 /obj/1.txt archive
+darca-object-vault-cli update-metadata test-repo-1 /obj/1.txt '{"size": 456, "checked": true}'
+
+# Touch Object
+darca-object-vault-cli touch test-repo-1 /obj/1.txt
+
+# Remove Object
+darca-object-vault-cli remove  test-repo-1 /obj/2.txt
+
+# Error: Get non-existent object
+darca-object-vault-cli get test-repo-1 /obj/missing.txt
+
+# Error: Add object to non-existent repository
+darca-object-vault-cli add --repository fake-repo --path /obj/x.txt --type file --metadata '{"test": true}'
+
+"""
+
 app = typer.Typer(help="DARCA Object Vault CLI")
 
 

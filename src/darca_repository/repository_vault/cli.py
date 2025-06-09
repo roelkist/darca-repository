@@ -6,6 +6,38 @@ from typing import Optional
 
 from darca_repository.repository_vault.factory import get_repository_vault
 from darca_repository.exceptions import RepositoryNotFoundError
+"""
+export DARCA_REPOSITORY_MODE=mysql
+export DARCA_REPOSITORY_MYSQL_HOST=mysql-darca-repository:3306
+export DARCA_REPOSITORY_MYSQL_USER=darca_user
+export DARCA_REPOSITORY_MYSQL_PASSWORD=darca_password
+export DARCA_REPOSITORY_MYSQL_DATABASE=darca_database
+
+or 
+export DARCA_REPOSITORY_MODE=yaml
+
+# Create Repositories
+darca-repository-vault-cli create --name test-repo-1 --description "First test repo" --tags alpha,beta --priority 1
+darca-repository-vault-cli create --name test-repo-2 --description "Second repo" --tags beta --priority 2
+
+# List Repositories
+darca-repository-vault-cli list
+darca-repository-vault-cli list --tag beta
+
+# Get Repository
+darca-repository-vault-cli get test-repo-1
+
+# Update Repository Fields
+darca-repository-vault-cli update-description test-repo-1 "Updated description"
+darca-repository-vault-cli update-tags test-repo-1 updated,newtag
+darca-repository-vault-cli update-priority test-repo-1 10
+
+# Remove Repository
+darca-repository-vault-cli remove test-repo-2
+
+# Error: Get non-existent repository
+darca-repository-vault-cli get non-existent-repo
+"""
 
 app = typer.Typer(help="DARCA Repository Vault CLI")
 
