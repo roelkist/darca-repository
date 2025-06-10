@@ -1,5 +1,4 @@
 # registry/interfaces.py
-# License: MIT
 
 from abc import ABC, abstractmethod
 from typing import List, Optional
@@ -9,18 +8,18 @@ from darca_repository.registry.models import RegistryProfile
 
 class Registry(ABC):
     """
-    Abstract interface for loading and managing repository profiles.
+    Async interface for managing registry profiles (storage backends).
 
-    Implementations may load profiles from:
+    Implementations may persist profiles via:
     - Local YAML files
-    - SQL databases (MySQL, PostgreSQL, etc.)
-    - Remote config services
+    - SQL databases (e.g., MySQL)
+    - Remote configuration stores
     """
 
     @abstractmethod
-    def get_profile(self, name: str) -> RegistryProfile:
+    async def get_profile(self, name: str) -> RegistryProfile:
         """
-        Retrieve a single repository profile by its name.
+        Retrieve a repository profile by name.
 
         Raises:
             RepositoryNotFoundError: if the profile does not exist.
@@ -28,25 +27,27 @@ class Registry(ABC):
         ...
 
     @abstractmethod
-    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[RegistryProfile]:
+    async def list_profiles(
+        self, *, enabled_only: bool = False, tag: Optional[str] = None
+    ) -> List[RegistryProfile]:
         """
-        Return a list of all available repository profiles.
+        List available profiles, optionally filtering by 'enabled' or tag.
 
         Args:
-            enabled_only (bool): If True, filters to enabled repositories only.
-            tag (str | None): If provided, filters to repositories containing the tag.
+            enabled_only: Filter only enabled profiles.
+            tag: Filter by presence of tag.
         """
         ...
 
     @abstractmethod
-    def add_profile(self, repository: RegistryProfile) -> None:
+    async def add_profile(self, profile: RegistryProfile) -> None:
         """
         Add or overwrite a repository profile.
         """
         ...
 
     @abstractmethod
-    def remove_profile(self, name: str) -> None:
+    async def remove_profile(self, name: str) -> None:
         """
         Delete a repository profile by name.
 

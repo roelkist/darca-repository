@@ -6,7 +6,14 @@ export DARCA_REPOSITORY_MYSQL_HOST=mysql-darca-repository:3306
 export DARCA_REPOSITORY_MYSQL_USER=darca_user
 export DARCA_REPOSITORY_MYSQL_PASSWORD=darca_password
 export DARCA_REPOSITORY_MYSQL_DATABASE=darca_database
+
+darca-registry-cli add --name local_dev --storage-url file:///tmp/darca-local --scheme file --parameters '{"compression": "gzip"}'   --tags dev,test
+darca-registry-cli list
+darca-registry-cli get local_dev
+darca-registry-cli remove local_dev
 '''
+
+import asyncio
 import json
 import typer
 from rich import print
@@ -16,51 +23,70 @@ from darca_repository.registry.factory import get_repository_registry
 from darca_repository.registry.models import RegistryProfile, StorageScheme
 from darca_repository.exceptions import RepositoryNotFoundError
 
-app = typer.Typer(help="DARCA Repository Registry CLI")
+app = typer.Typer(help="DARCA Registry CLI")
+
 
 @app.command("list")
 def list_profiles(
-    enabled_only: bool = typer.Option(False, "--enabled-only", "-e", help="Only show enabled repositories"),
+    enabled_only: bool = typer.Option(False, "--enabled-only", "-e", help="Only show enabled profiles"),
     tag: Optional[str] = typer.Option(None, "--tag", "-t", help="Filter by tag"),
 ):
-    """List all repository profiles."""
-    registry = get_repository_registry()
-    profiles = registry.list_profiles(enabled_only=enabled_only, tag=tag)
-    if not profiles:
-        print("[bold yellow]No repository profiles found.[/bold yellow]")
-        return
+    asyncio.run(_list_profiles(enabled_only, tag))
 
+
+async def _list_profiles(enabled_only: bool, tag: Optional[str]):
+    registry = get_repository_registry()
+    profiles = await registry.list_profiles(enabled_only=enabled_only, tag=tag)
+    if not profiles:
+        print("[yellow]No repository profiles found.[/yellow]")
+        return
     for profile in profiles:
         print(json.dumps(profile.model_dump(mode="json"), indent=2))
 
 
 @app.command("get")
 def get_profile(name: str):
-    """Retrieve a specific repository profile by name."""
+    asyncio.run(_get_profile(name))
+
+
+async def _get_profile(name: str):
     registry = get_repository_registry()
     try:
-        profile = registry.get_profile(name)
+        profile = await registry.get_profile(name)
         print(json.dumps(profile.model_dump(mode="json"), indent=2))
     except RepositoryNotFoundError as e:
-        print(f"[bold red]Error:[/bold red] {e}")
+        print(f"[red]Error:[/red] {e}")
 
 
 @app.command("add")
 def add_profile(
-    name: str = typer.Option(..., help="Repository name"),
+    name: str = typer.Option(..., help="Profile name"),
     storage_url: str = typer.Option(..., help="Storage URL"),
     scheme: StorageScheme = typer.Option(..., help="Storage scheme (file, s3, mem, nfs)"),
-    credentials: Optional[str] = typer.Option(None, help="Credentials as JSON string"),
-    parameters: Optional[str] = typer.Option(None, help="Additional parameters as JSON string"),
+    credentials: Optional[str] = typer.Option(None, help="Credentials (JSON string)"),
+    parameters: Optional[str] = typer.Option(None, help="Parameters (JSON string)"),
+    enabled: bool = typer.Option(True, help="Mark profile as enabled"),
+    tags: Optional[str] = typer.Option(None, help="Comma-separated tags"),
 ):
-    """Add a new repository profile."""
+    asyncio.run(_add_profile(name, storage_url, scheme, credentials, parameters, enabled, tags))
+
+
+async def _add_profile(
+    name: str,
+    storage_url: str,
+    scheme: StorageScheme,
+    credentials: Optional[str],
+    parameters: Optional[str],
+    enabled: bool,
+    tags: Optional[str],
+):
     registry = get_repository_registry()
 
     try:
         creds_dict = json.loads(credentials) if credentials else None
         params_dict = json.loads(parameters) if parameters else {}
     except json.JSONDecodeError as e:
-        print(f"[bold red]Invalid JSON provided:[/bold red] {e}")
+        print(f"[red]Invalid JSON:[/red] {e}")
         raise typer.Exit(code=1)
 
     profile = RegistryProfile(
@@ -69,32 +95,26 @@ def add_profile(
         scheme=scheme,
         credentials=creds_dict,
         parameters=params_dict,
+        enabled=enabled,
+        tags=[t.strip() for t in tags.split(",")] if tags else None,
     )
 
-    registry.add_profile(profile)
-    print(f"[green]Repository '{name}' added successfully.[/green]")
+    await registry.add_profile(profile)
+    print(f"[green]Profile '{name}' added.[/green]")
 
 
 @app.command("remove")
 def remove_profile(name: str):
-    """Remove a repository profile by name."""
+    asyncio.run(_remove_profile(name))
+
+
+async def _remove_profile(name: str):
     registry = get_repository_registry()
     try:
-        registry.remove_profile(name)
-        print(f"[green]Repository '{name}' removed.[/green]")
+        await registry.remove_profile(name)
+        print(f"[green]Profile '{name}' removed.[/green]")
     except RepositoryNotFoundError as e:
-        print(f"[bold red]Error:[/bold red] {e}")
-
-
-@app.command("reload")
-def reload_profiles():
-    """Reload repository profiles (if supported)."""
-    registry = get_repository_registry()
-    if hasattr(registry, "reload"):
-        registry.reload()
-        print("[green]Registry reloaded successfully.[/green]")
-    else:
-        print("[yellow]This registry does not support reload operation.[/yellow]")
+        print(f"[red]Error:[/red] {e}")
 
 
 if __name__ == "__main__":

@@ -1,49 +1,52 @@
 # registry/mysql_registry.py
 
 from typing import List, Optional
-from sqlalchemy import (
-    create_engine,
-    Column,
-    String,
-    Text,
-    Boolean,
-    JSON,
-    select,
-    delete,
-)
-from sqlalchemy.orm import declarative_base, Session
-from sqlalchemy.exc import NoResultFound
+from datetime import datetime, timezone
+
+import sqlalchemy as sa
+import sqlalchemy.ext.asyncio as sa_async
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.exc import ProgrammingError
 
 from darca_repository.registry.models import RegistryProfile, StorageScheme
 from darca_repository.registry.interfaces import Registry
 from darca_repository.exceptions import RepositoryNotFoundError
+from darca_repository.config import get_config
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class RepositoryProfileTable(Base):
     __tablename__ = "repository_profiles"
 
-    name = Column(String(255), primary_key=True)
-    storage_url = Column(Text, nullable=False)
-    scheme = Column(String(20), nullable=False)
-    credentials = Column(JSON, nullable=True)
-    parameters = Column(JSON, nullable=True)
-    enabled = Column(Boolean, default=True)
-    tags = Column(JSON, nullable=True)
+    name: Mapped[str] = mapped_column(sa.String(255), primary_key=True)
+    storage_url: Mapped[str] = mapped_column(sa.Text, nullable=False)
+    scheme: Mapped[str] = mapped_column(sa.String(20), nullable=False)
+    credentials: Mapped[Optional[dict]] = mapped_column(sa.JSON, nullable=True)
+    parameters: Mapped[Optional[dict]] = mapped_column(sa.JSON, nullable=True)
+    enabled: Mapped[bool] = mapped_column(default=True)
+    tags: Mapped[Optional[List[str]]] = mapped_column(sa.JSON, nullable=True)
 
 
 class MySQLRegistry(Registry):
     """
-    MySQL-backed implementation of the Registry interface.
+    Async MySQL-backed implementation of the Registry interface.
     """
 
-    def __init__(self, connection_url: str, user: str, password: str):
-        self._engine = create_engine(
-            f"mysql+pymysql://{user}:{password}@{connection_url}",
-            future=True,
-        )
-        Base.metadata.create_all(self._engine)
+    def __init__(self):
+        cfg = get_config()
+        url = f"mysql+asyncmy://{cfg.mysql_user}:{cfg.mysql_password}@{cfg.mysql_host}/{cfg.mysql_database}"
+        self._engine = sa_async.create_async_engine(url, future=True)
+        self._sessionmaker = sa_async.async_sessionmaker(self._engine, expire_on_commit=False)
+        self._schema_initialized = False
+
+    async def _ensure_schema(self):
+        if not self._schema_initialized:
+            async with self._engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            self._schema_initialized = True
 
     def _to_model(self, row: RepositoryProfileTable) -> RegistryProfile:
         return RegistryProfile(
@@ -56,50 +59,55 @@ class MySQLRegistry(Registry):
             tags=row.tags or [],
         )
 
-    def _from_model(self, repository: RegistryProfile) -> RepositoryProfileTable:
+    def _from_model(self, profile: RegistryProfile) -> RepositoryProfileTable:
         return RepositoryProfileTable(
-            name=repository.name,
-            storage_url=repository.storage_url,
-            scheme=repository.scheme.value,
-            credentials=repository.credentials,
-            parameters=repository.parameters,
-            enabled=repository.enabled,
-            tags=repository.tags,
+            name=profile.name,
+            storage_url=profile.storage_url,
+            scheme=profile.scheme.value,
+            credentials=profile.credentials,
+            parameters=profile.parameters,
+            enabled=profile.enabled,
+            tags=profile.tags,
         )
 
-    def get_profile(self, name: str) -> RegistryProfile:
-        with Session(self._engine) as session:
-            stmt = select(RepositoryProfileTable).where(RepositoryProfileTable.name == name)
-            try:
-                row = session.execute(stmt).scalar_one()
-                return self._to_model(row)
-            except NoResultFound:
+    async def get_profile(self, name: str) -> RegistryProfile:
+        await self._ensure_schema()
+        async with self._sessionmaker() as session:
+            stmt = sa.select(RepositoryProfileTable).where(RepositoryProfileTable.name == name)
+            result = await session.execute(stmt)
+            row = result.scalar_one_or_none()
+            if not row:
                 raise RepositoryNotFoundError(name)
+            return self._to_model(row)
 
-    def list_profiles(
+    async def list_profiles(
         self, *, enabled_only: bool = False, tag: Optional[str] = None
     ) -> List[RegistryProfile]:
-        with Session(self._engine) as session:
-            stmt = select(RepositoryProfileTable)
+        await self._ensure_schema()
+        async with self._sessionmaker() as session:
+            stmt = sa.select(RepositoryProfileTable)
             if enabled_only:
                 stmt = stmt.where(RepositoryProfileTable.enabled == True)
-            rows = session.execute(stmt).scalars().all()
-
+            result = await session.execute(stmt)
+            rows = result.scalars().all()
             if tag:
                 rows = [r for r in rows if r.tags and tag in r.tags]
-
             return [self._to_model(r) for r in rows]
 
-    def add_profile(self, repository: RegistryProfile) -> None:
-        with Session(self._engine) as session:
-            obj = self._from_model(repository)
-            session.merge(obj)
-            session.commit()
+    async def add_profile(self, profile: RegistryProfile) -> None:
+        await self._ensure_schema()
+        async with self._sessionmaker() as session:
+            obj = self._from_model(profile)
+            await session.merge(obj)
+            await session.commit()
 
-    def remove_profile(self, name: str) -> None:
-        with Session(self._engine) as session:
-            stmt = delete(RepositoryProfileTable).where(RepositoryProfileTable.name == name)
-            result = session.execute(stmt)
-            if result.rowcount == 0:
+    async def remove_profile(self, name: str) -> None:
+        await self._ensure_schema()
+        async with self._sessionmaker() as session:
+            stmt = sa.select(RepositoryProfileTable).where(RepositoryProfileTable.name == name)
+            result = await session.execute(stmt)
+            row = result.scalar_one_or_none()
+            if not row:
                 raise RepositoryNotFoundError(name)
-            session.commit()
+            await session.delete(row)
+            await session.commit()

@@ -1,81 +1,69 @@
 # registry/yaml_registry.py
-# License: MIT
 
 import os
-from typing import Dict, List, Optional
+from typing import List, Optional
+from pathlib import Path
 
 import yaml
+import aiofiles
 
 from darca_repository.exceptions import RepositoryNotFoundError
 from darca_repository.registry.models import RegistryProfile
 from darca_repository.registry.interfaces import Registry
+from darca_repository.config import get_config
 
 
 class YamlRegistry(Registry):
     """
-    Loads repository profiles from a YAML directory.
+    Async YAML-backed implementation of the Registry interface.
 
-    Each YAML file represents a single repository profile.
+    Each profile is stored in its own file under `registry_profile_dir`.
     """
 
-    def __init__(self, directory: str):
-        self._directory = os.path.abspath(directory)
-        self._profiles: Dict[str, RegistryProfile] = {}
-        self._load_profiles()
+    def __init__(self, base_path: Optional[Path] = None):
+        cfg = get_config()
+        self._directory = Path(base_path or cfg.registry_profile_dir).expanduser().resolve()
+        self._directory.mkdir(parents=True, exist_ok=True)
 
-    def _load_profiles(self) -> None:
-        if not os.path.isdir(self._directory):
-            raise FileNotFoundError(f"Repository directory does not exist: {self._directory}")
+    def _get_file_path(self, name: str) -> Path:
+        return self._directory / f"{name}.yaml"
 
-        self._profiles.clear()
-
-        for fname in os.listdir(self._directory):
-            if not fname.endswith(".yaml"):
-                continue
-            path = os.path.join(self._directory, fname)
-            with open(path, "r") as f:
-                data = yaml.safe_load(f)
-                if not isinstance(data, dict):
-                    continue  # skip empty or invalid YAML files
-                profile = RegistryProfile(**data)
-                self._profiles[profile.name] = profile
-
-    def reload(self) -> None:
-        """
-        Explicitly reload all profiles from disk.
-        """
-        self._load_profiles()
-
-    def _save_profile(self, repository: RegistryProfile) -> None:
-        path = os.path.join(self._directory, f"{repository.name}.yaml")
-        with open(path, "w") as f:
-            yaml.safe_dump(repository.model_dump(mode="json"), f)
-
-    def get_profile(self, name: str) -> RegistryProfile:
-        try:
-            return self._profiles[name]
-        except KeyError:
-            raise RepositoryNotFoundError(
-                f"No repository named '{name}' found in {self._directory}."
-            )
-
-    def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[RegistryProfile]:
-        profiles = self._profiles.values()
-        if enabled_only:
-            profiles = filter(lambda r: r.enabled, profiles)
-        if tag:
-            profiles = filter(lambda r: r.tags and tag in r.tags, profiles)
-        return list(profiles)
-
-    def add_profile(self, repository: RegistryProfile) -> None:
-        self._profiles[repository.name] = repository
-        self._save_profile(repository)
-
-    def remove_profile(self, name: str) -> None:
-        if name not in self._profiles:
+    async def get_profile(self, name: str) -> RegistryProfile:
+        path = self._get_file_path(name)
+        if not path.exists():
             raise RepositoryNotFoundError(name)
+        async with aiofiles.open(path, "r") as f:
+            content = await f.read()
+        data = yaml.safe_load(content)
+        return RegistryProfile(**data)
 
-        del self._profiles[name]
-        path = os.path.join(self._directory, f"{name}.yaml")
-        if os.path.exists(path):
-            os.remove(path)
+    async def list_profiles(self, *, enabled_only: bool = False, tag: Optional[str] = None) -> List[RegistryProfile]:
+        results = []
+        for file in self._directory.glob("*.yaml"):
+            async with aiofiles.open(file, "r") as f:
+                content = await f.read()
+            data = yaml.safe_load(content)
+            if not isinstance(data, dict):
+                continue
+            profile = RegistryProfile(**data)
+            if enabled_only and not profile.enabled:
+                continue
+            if tag and (not profile.tags or tag not in profile.tags):
+                continue
+            results.append(profile)
+        return results
+
+    async def add_profile(self, profile: RegistryProfile) -> None:
+        path = self._get_file_path(profile.name)
+        async with aiofiles.open(path, "w") as f:
+            await f.write(yaml.safe_dump(profile.model_dump(mode="json")))
+
+    async def remove_profile(self, name: str) -> None:
+        path = self._get_file_path(name)
+        if not path.exists():
+            raise RepositoryNotFoundError(name)
+        path.unlink()
+
+    async def reload(self) -> None:
+        # No-op for compatibility; data is always loaded from file
+        return
