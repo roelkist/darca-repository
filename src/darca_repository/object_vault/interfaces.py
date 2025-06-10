@@ -1,44 +1,40 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from darca_repository.object_vault.models import RepositoryObject
+from darca_repository.object_vault.models import BucketObject
 
 
 class ObjectVault(ABC):
-    """Async interface for managing repository-scoped objects."""
+    """Async interface for managing bucket-scoped objects."""
 
     @abstractmethod
-    async def get_object(self, repository_name: str, object_path: str) -> RepositoryObject:
-        """Return a single object by its path."""
+    async def get_object(self, bucket: str, object_path: str) -> BucketObject:
+        """Return a single object by its path within the bucket."""
         ...
 
     @abstractmethod
-    async def list_objects(self, repository_name: str) -> List[RepositoryObject]:
-        """Return all objects in a repository."""
+    async def list_objects(self, bucket: str) -> List[BucketObject]:
+        """Return all objects in a given bucket."""
         ...
 
     @abstractmethod
     async def add_object(
         self,
-        repository_name: str,
+        bucket: str,
         object_path: str,
         *,
         type: Optional[str] = None,
-        metadata: Optional[dict] = None,
+        metadata: Optional[dict] = None,  # still optional for backward compatibility
     ) -> None:
         ...
 
     @abstractmethod
-    async def remove_object(self, repository_name: str, object_path: str) -> None:
+    async def remove_object(self, bucket: str, object_path: str) -> None:
         ...
 
     @abstractmethod
-    async def update_type(self, repository_name: str, object_path: str, type: Optional[str]) -> None:
+    async def update_type(self, bucket: str, object_path: str, type: Optional[str]) -> None:
         ...
 
     @abstractmethod
-    async def update_metadata(self, repository_name: str, object_path: str, metadata: Optional[dict]) -> None:
-        ...
-
-    @abstractmethod
-    async def touch_object(self, repository_name: str, object_path: str) -> None:
+    async def touch_object(self, bucket: str, object_path: str) -> None:
         ...

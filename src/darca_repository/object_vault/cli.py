@@ -17,61 +17,59 @@ export DARCA_REPOSITORY_MYSQL_DATABASE=darca_database
 or 
 export DARCA_REPOSITORY_MODE=yaml
 
-# Add Objects
-darca-object-vault-cli add --repository test-repo-1 --path /obj/1.txt --type document --metadata '{"size": 123, "owner": "alice"}'
-darca-object-vault-cli add --repository test-repo-1 --path /obj/2.txt --type image --metadata '{"resolution": "1080p"}'
+# Add Objects to a Bucket
+darca-object-vault-cli add --bucket test-bucket-1 --path /obj/1.txt --type document
+darca-object-vault-cli add --bucket test-bucket-1 --path /obj/2.txt --type image
 
-# List Objects
-darca-object-vault-cli list test-repo-1
+# List All Objects in the Bucket
+darca-object-vault-cli list test-bucket-1
 
-# Get Object
-darca-object-vault-cli get test-repo-1 /obj/1.txt
+# Get Specific Object by Path
+darca-object-vault-cli get test-bucket-1 /obj/1.txt
 
-# Update Object Fields
-darca-object-vault-cli update-type test-repo-1 /obj/1.txt archive
-darca-object-vault-cli update-metadata test-repo-1 /obj/1.txt '{"size": 456, "checked": true}'
+# Update Object Type
+darca-object-vault-cli update-type test-bucket-1 /obj/1.txt archive
 
-# Touch Object
-darca-object-vault-cli touch test-repo-1 /obj/1.txt
+# Touch Object (updates modification time)
+darca-object-vault-cli touch test-bucket-1 /obj/1.txt
 
-# Remove Object
-darca-object-vault-cli remove  test-repo-1 /obj/2.txt
+# Remove Object from Bucket
+darca-object-vault-cli remove test-bucket-1 /obj/2.txt
 
-# Error: Get non-existent object
-darca-object-vault-cli get test-repo-1 /obj/missing.txt
+# Attempt to Get Non-Existent Object (error expected)
+darca-object-vault-cli get test-bucket-1 /obj/missing.txt
 
-# Error: Add object to non-existent repository
-darca-object-vault-cli add --repository fake-repo --path /obj/x.txt --type file --metadata '{"test": true}'
+# Add Object to New Bucket (bucket created automatically)
+darca-object-vault-cli add --bucket new-bucket --path /obj/alpha.txt --type binary
 
 """
 
 app = typer.Typer(help="DARCA Object Vault CLI")
 
-
 @app.command("list")
-def list_objects(repository: str):
-    asyncio.run(_list_objects(repository))
+def list_objects(bucket: str):
+    asyncio.run(_list_objects(bucket))
 
 
-async def _list_objects(repository: str):
+async def _list_objects(bucket: str):
     vault = get_object_vault()
-    objects = await vault.list_objects(repository)
+    objects = await vault.list_objects(bucket)
     if not objects:
-        print(f"[yellow]No objects found in '{repository}'.[/yellow]")
+        print(f"[yellow]No objects found in bucket '{bucket}'.[/yellow]")
         return
     for obj in objects:
         print(json.dumps(obj.model_dump(mode="json"), indent=2))
 
 
 @app.command("get")
-def get_object(repository: str, path: str):
-    asyncio.run(_get_object(repository, path))
+def get_object(bucket: str, path: str):
+    asyncio.run(_get_object(bucket, path))
 
 
-async def _get_object(repository: str, path: str):
+async def _get_object(bucket: str, path: str):
     vault = get_object_vault()
     try:
-        obj = await vault.get_object(repository, path)
+        obj = await vault.get_object(bucket, path)
         print(json.dumps(obj.model_dump(mode="json"), indent=2))
     except ObjectNotFoundError as e:
         print(f"[red]Error:[/red] {e}")
@@ -79,67 +77,53 @@ async def _get_object(repository: str, path: str):
 
 @app.command("add")
 def add_object(
-    repository: str = typer.Option(..., help="Target repository"),
+    bucket: str = typer.Option(..., help="Target bucket name"),
     path: str = typer.Option(..., help="Object path"),
     type: Optional[str] = typer.Option(None, help="Type of object"),
-    metadata: Optional[str] = typer.Option(None, help="Metadata as JSON string"),
 ):
-    asyncio.run(_add_object(repository, path, type, metadata))
+    asyncio.run(_add_object(bucket, path, type))
 
 
-async def _add_object(repository: str, path: str, type: Optional[str], metadata: Optional[str]):
+async def _add_object(bucket: str, path: str, type: Optional[str]):
     vault = get_object_vault()
-    meta_dict = json.loads(metadata) if metadata else None
-    await vault.add_object(repository, path, type=type, metadata=meta_dict)
-    print(f"[green]Object '{path}' added to repository '{repository}'.[/green]")
+    await vault.add_object(bucket, path, type=type)
+    print(f"[green]Object '{path}' added to bucket '{bucket}'.[/green]")
 
 
 @app.command("remove")
-def remove_object(repository: str, path: str):
-    asyncio.run(_remove_object(repository, path))
+def remove_object(bucket: str, path: str):
+    asyncio.run(_remove_object(bucket, path))
 
 
-async def _remove_object(repository: str, path: str):
+async def _remove_object(bucket: str, path: str):
     vault = get_object_vault()
     try:
-        await vault.remove_object(repository, path)
-        print(f"[green]Object '{path}' removed from '{repository}'.[/green]")
+        await vault.remove_object(bucket, path)
+        print(f"[green]Object '{path}' removed from bucket '{bucket}'.[/green]")
     except ObjectNotFoundError as e:
         print(f"[red]Error:[/red] {e}")
 
 
 @app.command("update-type")
-def update_type(repository: str, path: str, type: Optional[str]):
-    asyncio.run(_update_type(repository, path, type))
+def update_type(bucket: str, path: str, type: Optional[str]):
+    asyncio.run(_update_type(bucket, path, type))
 
 
-async def _update_type(repository: str, path: str, type: Optional[str]):
+async def _update_type(bucket: str, path: str, type: Optional[str]):
     vault = get_object_vault()
-    await vault.update_type(repository, path, type)
-    print(f"[green]Type updated for object '{path}' in '{repository}'.[/green]")
-
-
-@app.command("update-metadata")
-def update_metadata(repository: str, path: str, metadata: str):
-    asyncio.run(_update_metadata(repository, path, metadata))
-
-
-async def _update_metadata(repository: str, path: str, metadata: str):
-    vault = get_object_vault()
-    meta_dict = json.loads(metadata)
-    await vault.update_metadata(repository, path, meta_dict)
-    print(f"[green]Metadata updated for object '{path}' in '{repository}'.[/green]")
+    await vault.update_type(bucket, path, type)
+    print(f"[green]Type updated for object '{path}' in bucket '{bucket}'.[/green]")
 
 
 @app.command("touch")
-def touch_object(repository: str, path: str):
-    asyncio.run(_touch_object(repository, path))
+def touch_object(bucket: str, path: str):
+    asyncio.run(_touch_object(bucket, path))
 
 
-async def _touch_object(repository: str, path: str):
+async def _touch_object(bucket: str, path: str):
     vault = get_object_vault()
-    await vault.touch_object(repository, path)
-    print(f"[green]Object '{path}' in '{repository}' touched.[/green]")
+    await vault.touch_object(bucket, path)
+    print(f"[green]Object '{path}' in bucket '{bucket}' touched.[/green]")
 
 
 if __name__ == "__main__":
