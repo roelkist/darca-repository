@@ -19,7 +19,7 @@ uvicorn = "^0.34.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
-pytest-cov = "^6.0.0"
+pytest-cov = ">=6,<8"
 pytest-xdist = "^3.7.0"
 flake8 = "^7.1.2"
 black = "^25.1.0"
