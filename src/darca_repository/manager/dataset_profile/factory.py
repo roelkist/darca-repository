@@ -2,7 +2,7 @@ from darca_repository.object_vault.interfaces import ObjectVault
 from darca_repository.config import get_config
 
 
-def get_object_vault() -> ObjectVault:
+def get_dataset() -> Dataset:
     """
     Factory for ObjectVault backend selection.
     """

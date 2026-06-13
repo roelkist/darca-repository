@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from darca_repository.object_vault.models import BucketObject
+from darca_repository.dataset_profile.models import File
 
 
 class ObjectVault(ABC):
     """Async interface for managing bucket-scoped objects."""
 
     @abstractmethod
-    async def get_object(self, bucket: str, object_path: str) -> BucketObject:
+    async def get_object(self, bucket: str, object_path: str) -> File:
         """Return a single object by its path within the bucket."""
         ...
 
     @abstractmethod
-    async def list_objects(self, bucket: str) -> List[BucketObject]:
+    async def list_objects(self, bucket: str) -> List[File]:
         """Return all objects in a given bucket."""
         ...
 

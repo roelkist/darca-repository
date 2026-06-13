@@ -4,7 +4,7 @@ import typer
 from rich import print
 from typing import Optional
 
-from darca_repository.object_vault.factory import get_object_vault
+from darca_repository.dataset_profile.factory import get_object_vault
 from darca_repository.exceptions import ObjectNotFoundError
 
 """
