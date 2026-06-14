@@ -34,9 +34,17 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: Guide
+   :caption: User Guide
 
    usage
+   architecture
+   examples
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Developer Guide
+
+   development
 
 .. toctree::
    :maxdepth: 1
