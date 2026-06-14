@@ -1,16 +1,22 @@
-# api.py
+# src/darca_repository/server/api.py
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from typing import Annotated
 
 from darca_repository.server.dependencies import get_registry
-from darca_repository.server.service import connect_to_repository
-from darca_repository.registry.base import RepositoryRegistry
+from darca_repository.server.service import get_or_create_instance, connect_to_repository
+from darca_repository.registry.interfaces import RepositoryRegistry
 from darca_repository.models import Repository, RepositoryConnectionInfo
 from darca_repository.exceptions import RepositoryNotFoundError
 
 router = APIRouter()
 
+
+# ------------------------------
+# Repository Profile Management
+# ------------------------------
 
 class RepositoryCreateRequest(BaseModel):
     name: str
@@ -66,3 +72,65 @@ def delete_repository(name: str, registry: RepositoryRegistry = Depends(get_regi
         return {"message": f"Repository '{name}' removed."}
     except RepositoryNotFoundError:
         raise HTTPException(status_code=404, detail=f"Repository '{name}' not found.")
+
+
+# ------------------------
+# Repository I/O Endpoints
+# ------------------------
+
+@router.get("/{name}/list")
+async def list_files(
+    name: str,
+    path: Annotated[str, Query(alias="path")] = ".",
+    registry: RepositoryRegistry = Depends(get_registry),
+):
+    instance = await get_or_create_instance(name, registry)
+    return {"files": await instance.list(path)}
+
+
+@router.get("/{name}/exists")
+async def exists_file(
+    name: str,
+    path: Annotated[str, Query(alias="path")],
+    registry: RepositoryRegistry = Depends(get_registry),
+):
+    instance = await get_or_create_instance(name, registry)
+    return {"exists": await instance.exists(path)}
+
+
+@router.get("/{name}/read")
+async def read_file(
+    name: str,
+    path: Annotated[str, Query(alias="path")],
+    registry: RepositoryRegistry = Depends(get_registry),
+):
+    instance = await get_or_create_instance(name, registry)
+    content = await instance.read(path)
+    return StreamingResponse(iter([content]), media_type="application/octet-stream")
+
+
+class WriteRequest(BaseModel):
+    path: str
+    data: bytes
+
+
+@router.post("/{name}/write")
+async def write_file(
+    name: str,
+    req: WriteRequest,
+    registry: RepositoryRegistry = Depends(get_registry),
+):
+    instance = await get_or_create_instance(name, registry)
+    await instance.write(req.path, req.data)
+    return {"status": "written"}
+
+
+@router.delete("/{name}/delete")
+async def delete_file(
+    name: str,
+    path: Annotated[str, Query(alias="path")],
+    registry: RepositoryRegistry = Depends(get_registry),
+):
+    instance = await get_or_create_instance(name, registry)
+    await instance.delete(path)
+    return {"status": "deleted"}

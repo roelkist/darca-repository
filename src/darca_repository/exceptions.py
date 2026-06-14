@@ -66,3 +66,35 @@ class RepositoryValidationError(RepositoryException):
             metadata=None,
             cause=cause,
         )
+
+class RepositoryNotConnectedError(RepositoryException):
+    def __init__(self, name: str):
+        super().__init__(
+            message=f"Repository '{name}' is not connected.",
+            error_code="REPOSITORY_NOT_CONNECTED",
+            metadata={"repository": name},
+        )
+
+
+class RepositoryIOError(RepositoryException):
+    def __init__(self, message: str, *, cause: Optional[Exception] = None):
+        super().__init__(
+            message=message,
+            error_code="REPOSITORY_IO_ERROR",
+            cause=cause,
+        )
+
+
+class RepositoryAlreadyExistsError(Exception):
+    def __init__(self, name: str):
+        super().__init__(f"Repository '{name}' already exists.")
+
+
+class ObjectNotFoundError(Exception):
+    def __init__(self, repository_name: str, object_path: str):
+        super().__init__(f"Object '{object_path}' not found in repository '{repository_name}'.")
+
+
+class ObjectAlreadyExistsError(Exception):
+    def __init__(self, repository_name: str, object_path: str):
+        super().__init__(f"Object '{object_path}' already exists in repository '{repository_name}'.")

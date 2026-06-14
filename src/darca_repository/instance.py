@@ -1,22 +1,23 @@
 # src/darca_repository/instance.py
 # License: MIT
 
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from darca_storage.client import StorageClient
 from darca_storage.factory import StorageConnectorFactory
 
-from darca_repository.exceptions import RepositoryConnectionError
+from darca_repository.exceptions import (
+    RepositoryConnectionError,
+    RepositoryNotConnectedError,
+    RepositoryIOError,
+)
 from darca_repository.models import Repository
 
 
 class RepositoryInstance:
     """
-    Represents an active repository instance with its storage client resolved.
-
-    Provides access to:
-        - repository metadata
-        - associated StorageClient
+    Represents an active repository instance with its resolved storage client.
+    Provides direct access to storage operations like read, write, list, etc.
     """
 
     def __init__(self, repository: Repository):
@@ -31,29 +32,25 @@ class RepositoryInstance:
     def metadata(self) -> Repository:
         return self._repository
 
-    @property
-    def client(self) -> Optional[StorageClient]:
-        """Return the connected StorageClient if available."""
-        return self._client
+    def is_connected(self) -> bool:
+        return self._client is not None
 
     async def connect(self) -> StorageClient:
         if self._client is not None:
             return self._client
 
         try:
-            # Resolve credentials from secrets
             raw_credentials: Dict[str, str] = {
                 k: self._repository.get_secret(k)
                 for k in (self._repository.connection.credentials or {})
                 if self._repository.get_secret(k) is not None
             }
 
-            # Build session metadata context
             session_metadata = {
                 "repository_name": self._repository.name,
                 "storage_url": self._repository.connection.storage_url,
                 "scheme": self._repository.connection.scheme.value,
-                "tags": self._repository.tags or {},  
+                "tags": self._repository.tags or {},
             }
 
             self._client = await StorageConnectorFactory.from_url(
@@ -75,12 +72,12 @@ class RepositoryInstance:
                 cause=e,
             ) from e
 
-    async def test_connection(self) -> bool:
-        """
-        Probes whether the repository's root directory is reachable.
+    async def disconnect(self) -> None:
+        if self._client and hasattr(self._client, "close"):
+            await self._client.close()
+        self._client = None
 
-        Returns:
-            bool: True if the repository is usable, False otherwise.
-        """
+    async def test_connection(self) -> bool:
         client = await self.connect()
         return await client.exists(".")
+
